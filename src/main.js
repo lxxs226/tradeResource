@@ -20,6 +20,9 @@ import { Lazyload } from 'vant';
 Vue.use(Lazyload);
 import { Form } from 'vant';
 Vue.use(Form);
+import { RadioGroup, Radio } from 'vant';
+Vue.use(Radio);
+Vue.use(RadioGroup);
 
 Vue.config.productionTip = false
 
