@@ -5,27 +5,64 @@
       <img src="@/assets/pic/logo2.png" class="logoPic"/>
     </div>
     <div class="loginForm">
-      <van-form @submit="onSubmit">
+      <div v-show="isLogin">
+        <van-form @submit="onLoginSubmit">
+            <van-field
+                v-model="loginForm.username"
+                name="用户名"
+                label="用户名"
+                placeholder="请输入用户名"
+                :rules="[{ required: true, message: '请填写用户名' }]"
+            />
+            <van-field
+                v-model="loginForm.password"
+                type="password"
+                name="密码"
+                label="密码"
+                placeholder="请输入密码"
+                :rules="[{ required: true, message: '请填写密码' }]"
+            />
+            <div style="margin: 16px;">
+                <van-button round block type="info" native-type="submit">登录</van-button>
+            </div>
+        </van-form>
+        <div class="registerLine" @click="goRegister">注册账号</div>
+      </div>
+      <div v-show="!isLogin">
+        <van-form @submit="onRegisterSubmit">
           <van-field
-              v-model="username"
+              v-model="registerForm.username"
               name="用户名"
               label="用户名"
               placeholder="请输入用户名"
               :rules="[{ required: true, message: '请填写用户名' }]"
           />
           <van-field
-              v-model="password"
+              v-model="registerForm.password"
               type="password"
               name="密码"
               label="密码"
               placeholder="请输入密码"
               :rules="[{ required: true, message: '请填写密码' }]"
           />
+          <van-field
+              v-model="registerForm.password2"
+              type="password"
+              name="确认密码"
+              label="确认密码"
+              placeholder="请再次输入密码"
+              :rules="[{ required: true, message: '请再次填写密码' }]"
+          />
+          <van-radio-group v-model="registerForm.radio" direction="horizontal">
+              <van-radio name="1" icon-size="0.5rem">我要入驻赚钱</van-radio>
+              <van-radio name="2" icon-size="0.5rem">我要雇佣作者</van-radio>
+          </van-radio-group>
           <div style="margin: 16px;">
-              <van-button round block type="info" native-type="submit">登录</van-button>
+              <van-button round block type="info" native-type="submit">注册</van-button>
           </div>
-      </van-form>
-      <div class="registerLine">注册账号</div>
+        </van-form>
+        <div class="registerLine" @click="goLogin">已有账号？马上登录</div>
+      </div>
     </div>
   </div>
 </template>
@@ -35,13 +72,32 @@ export default {
   name: 'login',
   data(){
     return{
+      //是否为登陆界面
+      isLogin:true,
+      loginForm:{
         username:'',
         password:''
+      },
+      registerForm:{
+        username:'',
+        password:''
+      }
     }
   },
   methods:{
-    onSubmit(){
-
+    //登录提交
+    onLoginSubmit(){
+      console.log(this.loginForm)
+    },
+    //注册提交
+    onRegisterSubmit(){
+      console.log(this.registerForm)
+    },
+    goRegister(){
+      this.isLogin=false
+    },
+    goLogin(){
+      this.isLogin=true
     }
   }
 }
@@ -79,6 +135,11 @@ export default {
   line-height: 1.2rem;
   font-size: 0.5rem;
   background-color: transparent;
+}
+.van-radio-group{
+  font-size: 0.5rem;
+  height: 1.1rem;
+  margin-left: 0.6rem;
 }
 /deep/.van-field__error-message{
   line-height: 0.8rem !important;

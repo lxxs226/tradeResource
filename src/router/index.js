@@ -7,7 +7,6 @@ import companyTaskManage from '../views/taskManage/companyTaskManage.vue'
 import userTaskManage from '../views/taskManage/userTaskManage.vue'
 import companyArticle from '../views/articleManage/companyArticle.vue'
 import login from '../views/log/login.vue'
-import register from '../views/log/register.vue'
 
 Vue.use(VueRouter)
 
@@ -67,10 +66,6 @@ const routes = [
     path: '/login',
     name: 'login',
     component: login
-  },{
-    path: '/register',
-    name: 'register',
-    component: register
   }
 ]
 
