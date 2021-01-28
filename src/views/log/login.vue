@@ -117,7 +117,6 @@ export default {
     align-items: center;
 }
 .logoPic{
-  // width: rem;
   height: 4.1rem;
   margin-left: 0.5rem;
 }
