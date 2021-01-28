@@ -126,7 +126,6 @@ export default {
     margin-left: 2%;
     margin-right: 2%;
     margin-top:1.5rem;
-    // height: 6.25rem;
     border-radius: .25rem;
     background-color: rgba(255, 255, 255, 0.9);
     padding:0.2rem 0.4rem 0.5rem 0.4rem;
