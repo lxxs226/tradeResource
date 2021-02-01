@@ -23,6 +23,9 @@ Vue.use(Form);
 import { RadioGroup, Radio } from 'vant';
 Vue.use(Radio);
 Vue.use(RadioGroup);
+import { Tab, Tabs } from 'vant';
+Vue.use(Tab);
+Vue.use(Tabs);
 
 Vue.config.productionTip = false
 

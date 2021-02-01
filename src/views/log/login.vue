@@ -51,7 +51,8 @@
               name="确认密码"
               label="确认密码"
               placeholder="请再次输入密码"
-              :rules="[{ required: true, message: '请再次填写密码' }]"
+              @blur="checkPassword" 
+              :error-message="errMsg"
           />
           <van-radio-group v-model="registerForm.radio" direction="horizontal">
               <van-radio name="1" icon-size="0.5rem">我要入驻赚钱</van-radio>
@@ -80,8 +81,12 @@ export default {
       },
       registerForm:{
         username:'',
-        password:''
-      }
+        password:'',
+        password2:'',
+        radio:'1'
+      },
+      //验证两次密码是否一致，提示信息
+      errMsg:''
     }
   },
   methods:{
@@ -91,6 +96,7 @@ export default {
     },
     //注册提交
     onRegisterSubmit(){
+      this.checkPassword()
       console.log(this.registerForm)
     },
     goRegister(){
@@ -98,6 +104,17 @@ export default {
     },
     goLogin(){
       this.isLogin=true
+    },
+    checkPassword(){
+      if(this.registerForm.password2==""){
+        this.errMsg="请填写确认密码！"
+      }else{
+        if(this.registerForm.password2!==this.registerForm.password){
+          this.errMsg="两次输入密码不一致！"
+        }else{
+          this.errMsg=''
+        }
+      }
     }
   }
 }
