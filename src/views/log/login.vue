@@ -107,7 +107,7 @@ export default {
     },
     checkPassword(){
       if(this.registerForm.password2==""){
-        this.errMsg="请填写确认密码！"
+        this.errMsg="请再次填写密码！"
       }else{
         if(this.registerForm.password2!==this.registerForm.password){
           this.errMsg="两次输入密码不一致！"

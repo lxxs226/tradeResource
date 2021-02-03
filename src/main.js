@@ -26,6 +26,17 @@ Vue.use(RadioGroup);
 import { Tab, Tabs } from 'vant';
 Vue.use(Tab);
 Vue.use(Tabs);
+import { Icon } from 'vant';
+Vue.use(Icon);
+import { Search } from 'vant';
+Vue.use(Search);
+import { Picker } from 'vant';
+Vue.use(Picker);
+import { Popup } from 'vant';
+Vue.use(Popup);
+import { DropdownMenu, DropdownItem } from 'vant';
+Vue.use(DropdownMenu);
+Vue.use(DropdownItem);
 
 Vue.config.productionTip = false
 
