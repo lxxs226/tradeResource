@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import userIndex from '../views/userManage/userIndex.vue'
+import userEdit from '../views/userManage/userEdit.vue'
+import userInformation from '../views/userManage/userInformation.vue'
 import taskHall from '../views/taskInformation/taskHall.vue'
 import companyTaskManage from '../views/taskManage/companyTaskManage.vue'
 import userTaskManage from '../views/taskManage/userTaskManage.vue'
@@ -25,6 +27,22 @@ const routes = [
     component: Home,
     meta: {
       keepAlive: true
+    }
+  },
+  {
+    path: '/userEdit',
+    name: 'userEdit',
+    component: userEdit,
+    meta: {
+      keepAlive: false
+    }
+  },
+  {
+    path: '/userInformation',
+    name: 'userInformation',
+    component: userInformation,
+    meta: {
+      keepAlive: false
     }
   },
   {

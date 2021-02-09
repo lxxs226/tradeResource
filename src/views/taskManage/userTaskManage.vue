@@ -5,7 +5,7 @@
     <van-search  v-model="searchTask" input-align="center"  shape="round" placeholder="请输入搜索关键词" />
 
     <div class="userTaskList">
-      <van-tabs line-width=1rem v-model="active" swipeable>
+      <van-tabs line-width="1rem" line-height=".06rem" v-model="active" swipeable>
         <van-tab title="待编辑">
           <div class="userTaskItem" v-for="(item,index) in userTaskLists" :key="index">
             <div class="userTaskSubjectTitle">{{item.userTaskSubject}}</div>
@@ -137,7 +137,7 @@ export default {
 }
 
 .userTaskItem{
-  border-bottom: .0003rem solid  #808080;
+  border-bottom: .001rem solid  #c2c0c0;
   width: 100%;
   margin-top: 0.1rem;
 }

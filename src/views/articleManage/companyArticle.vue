@@ -5,7 +5,7 @@
     <van-search  v-model="searchTask" input-align="center"  shape="round" placeholder="请输入搜索关键词" />
 
     <div class="companyArticleList">
-      <van-tabs line-width=1rem v-model="active" swipeable>
+      <van-tabs line-width="1.1rem" line-height=".06rem" v-model="active" swipeable>
         <van-tab title="待审核">
           <div class="articleItem" v-for="(item,index) in articleLists" :key="index">
             <div class="articleSubjectTitle">{{item.articleSubject}}</div>
@@ -107,7 +107,7 @@ export default {
 
 .van-cell{
   font-size: 0.35rem;
-  line-height: 1rem;
+  line-height: .75rem;
 }
 
 /deep/.van-field__left-icon .van-icon, .van-field__right-icon .van-icon{
@@ -125,7 +125,7 @@ export default {
 }
 
 .articleItem{
-  border-bottom: .0003rem solid  #808080;
+  border-bottom: .001rem solid  #c2c0c0;
   width: 100%;
   margin-top: 0.1rem;
 }

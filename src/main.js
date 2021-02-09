@@ -37,6 +37,11 @@ Vue.use(Popup);
 import { DropdownMenu, DropdownItem } from 'vant';
 Vue.use(DropdownMenu);
 Vue.use(DropdownItem);
+import { Image as VanImage } from 'vant';
+Vue.use(VanImage);
+import { Cell, CellGroup } from 'vant';
+Vue.use(Cell);
+Vue.use(CellGroup);
 
 Vue.config.productionTip = false
 

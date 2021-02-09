@@ -3,12 +3,12 @@
   <div class="companyTaskManage">
     <!-- 搜索框 -->
     <div class="nav">
-     <van-icon name="add-o" size="1rem" />
+     <van-icon name="add-o" size=".75rem" />
      <van-search  v-model="searchTask" input-align="center" shape="round" placeholder="请输入搜索关键词" />
     </div>
 
     <div class="companyTaskList">
-      <van-tabs v-model="active" line-width=1.4rem>
+      <van-tabs v-model="active" line-width="1.4rem" line-height=".06rem" swipeable>
         <van-tab title="待接任务">
           <div class="companyTaskItem" v-for="(item,index) in companyTaskLists" :key="index">
             <div class="companyTaskSubjectTitle">{{item.companyTaskSubject}}</div>
@@ -90,6 +90,10 @@ export default {
   padding-right: 5rem;
 }
 
+.van-icon{
+  margin-top: .1rem;
+}
+
 /deep/.van-field__left-icon .van-icon, .van-field__right-icon .van-icon{
   font-size: 0.5rem;
 }
@@ -104,7 +108,7 @@ export default {
 }
 
 .companyTaskItem{
-  border-bottom: .0003rem solid  #808080;
+  border-bottom: .001rem solid  #c2c0c0;
   width: 100%;
   margin-top: 0.1rem;
 }

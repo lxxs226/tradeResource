@@ -19,7 +19,7 @@
       <div class="recommendListTitle">
         推荐任务
       </div>
-      <van-tabs v-model="active">
+      <van-tabs v-model="active" line-height=".06rem" line-width="1.3rem" swipeable>
         <van-tab>
           <template #title><img src="../assets/pic/zhihu.png" class="recommendListTitleIcon" style="width:22%;height:22%"/>知乎</template>
           <div class="recommendItem" v-for="(item,index) in recommendLists" :key="index">
@@ -128,7 +128,7 @@ export default {
   width: 0.7rem;
 }
 .recommendItem{
-  border-bottom: .0003rem solid  #808080;
+  border-bottom: .001rem solid  #c2c0c0;
   width: 100%;
   margin-top: 0.1rem;
 }

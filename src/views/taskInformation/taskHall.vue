@@ -143,7 +143,7 @@ export default {
 }
 
 .hallTaskItem{
-  border-bottom: .0003rem solid  #808080;
+  border-bottom: .001rem solid  #c2c0c0;
   width: 100%;
   margin-top: 0.1rem;
 }
