@@ -86,7 +86,7 @@ export default {
     width: 90%;
 }
 .van-button--large{
-    height: 1.2rem;
+    height: 90px;
 }
 .van-button--info{
     background-color: #169bd5;
@@ -94,6 +94,7 @@ export default {
 }
 .van-button{
     font-size: 0.4rem;
+    border-radius: 10px;
 }
 .buttonLinePulisher{
     position:fixed;
@@ -101,6 +102,7 @@ export default {
     width: 90%;
     .van-button{
         width: 45%;
+        height: 90px;
     }
 }
 .buttonDelete{
