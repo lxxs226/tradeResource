@@ -110,3 +110,11 @@ pre {
     font-size: .5rem !important;
     margin-bottom: .15rem;
 }
+
+.dataSelect .van-picker__toolbar{
+    height: 1rem !important;
+    line-height: 1rem !important; 
+  }
+  .dataSelect .van-picker__title{
+   line-height: 1rem;
+  }

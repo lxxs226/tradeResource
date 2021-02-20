@@ -20,4 +20,7 @@ html,body,#app {
    margin: 0;
    margin-bottom: 1.8rem;
 }
+html{
+  font-size: 16px;
+}
 </style>
