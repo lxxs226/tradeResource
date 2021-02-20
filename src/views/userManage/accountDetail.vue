@@ -41,7 +41,7 @@ export default {
         minDate: new Date(2020, 0, 1),
         maxDate: new Date(2025, 10, 1),
         currentDate: new Date(),
-        monthValue:'2020年2月',
+        monthValue:'2021年2月',
         accountLists:[{
           accountSubject:'情侣热恋期之后如何保存感情？',
           completeDate:'2021年2月20日',

@@ -43,7 +43,7 @@ export default {
 
 .van-cell{
   font-size: 0.35rem;
-  line-height: 0.6rem;
+  line-height: 1rem;
 }
 
 /deep/.van-field__control{
