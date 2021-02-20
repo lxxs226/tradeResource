@@ -19,7 +19,7 @@
                 <div class="hallTaskIncome">稿酬：{{item.income}}元</div>
               </div>
             </div>
-          </div>
+      </div>
 
   </div>
 </template>

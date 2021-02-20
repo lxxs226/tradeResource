@@ -2,7 +2,7 @@
 <template>
   <div class="userInformation">
     <div class="pageTop">
-      <img src="@/assets/pic/headpic.jpg" class="headPic" />
+      <img src="@/assets/pic/touxiang.png" class="headPic" />
 
       <div class="mainInf">
         <!-- <van-field  value="赵丽颖" readonly  />
@@ -19,9 +19,6 @@
         <van-field label="联系方式" value="13312312123" readonly />
 
     </div>
-
-
-
 
 
   </div>

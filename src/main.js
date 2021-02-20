@@ -42,6 +42,11 @@ Vue.use(VanImage);
 import { Cell, CellGroup } from 'vant';
 Vue.use(Cell);
 Vue.use(CellGroup);
+import { Checkbox, CheckboxGroup } from 'vant';
+Vue.use(Checkbox);
+Vue.use(CheckboxGroup);
+import { DatetimePicker } from 'vant';
+Vue.use(DatetimePicker);
 
 Vue.config.productionTip = false
 
