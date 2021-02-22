@@ -47,6 +47,8 @@ Vue.use(Checkbox);
 Vue.use(CheckboxGroup);
 import { DatetimePicker } from 'vant';
 Vue.use(DatetimePicker);
+import { Dialog } from 'vant';
+Vue.use(Dialog);
 
 Vue.config.productionTip = false
 

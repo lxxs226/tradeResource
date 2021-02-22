@@ -10,6 +10,7 @@ import publishTask from '../views/taskManage/publishTask.vue'
 import userTaskManage from '../views/taskManage/userTaskManage.vue'
 import companyArticle from '../views/articleManage/companyArticle.vue'
 import articleContent from '../views/articleManage/articleContent.vue'
+import articleDetail from '../views/articleManage/articleDetail.vue'
 import login from '../views/log/login.vue'
 import accountDetail from '../views/userManage/accountDetail.vue'
 import taskDetail from '../views/taskInformation/taskDetail.vue'
@@ -130,6 +131,13 @@ const routes = [
     name: 'articleContent',
     component: articleContent
   },
+  //文稿情况页面
+  {
+    path: '/articleDetail',
+    name: 'articleDetail',
+    component: articleDetail
+  },
+  
 ]
 
 const router = new VueRouter({
