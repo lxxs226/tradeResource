@@ -49,6 +49,9 @@ import { DatetimePicker } from 'vant';
 Vue.use(DatetimePicker);
 import { Dialog } from 'vant';
 Vue.use(Dialog);
+import { Grid, GridItem } from 'vant';
+Vue.use(Grid);
+Vue.use(GridItem);
 
 Vue.config.productionTip = false
 
