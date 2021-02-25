@@ -2,12 +2,17 @@
 <template>
   <div class="userInformation">
     <div class="pageTop">
-      <img src="@/assets/pic/touxiang.png" class="headPic" />
-      <div class="mainInf">
+      <!-- <img src="@/assets/pic/touxiang.png" class="headPic" />
+      <div class="mainInf"> -->
         <!-- <van-field  value="赵丽颖" readonly  />
         <van-field  value="ID:154688" readonly /> -->
-        <div class="nameInf">赵丽颖</div>
+        <!-- <div class="nameInf">赵丽颖</div>
         <div class="idInf">ID:154688</div>
+      </div> -->
+      <img src="@/assets/pic/touxiang.png" class="logoPic"/>
+      <div class="userContent">
+        <div class="userNameContent">{{name}}</div>
+        <div class="userIdContent">ID:{{userId}}</div>
       </div>
     </div>
 
@@ -29,6 +34,7 @@ export default {
   data(){
     return{
       name: '赵丽颖',
+      userId:'132123456',
       sex: '女',
       age: '20',
       occupation: '经理',
@@ -51,6 +57,8 @@ export default {
 }
 .pageTop{
   display: flex;
+  margin-left: 4%;
+  margin-top: 4%;
 }
 .van-cell{
   font-size: .35rem;
@@ -67,6 +75,21 @@ export default {
   display: flex;
   flex-direction: column;
 }
-
-
+.logoPic{
+  width: 2rem;
+  height: 2rem;
+  border-radius: 100%;
+}
+.userContent{
+  margin-left: .625rem;
+}
+.userNameContent{
+  font-size: .43rem;
+  font-weight:bold;
+  line-height: 1rem;
+}
+.userIdContent{
+  font-size: .40rem;
+  letter-spacing: .03rem;
+}
 </style>

@@ -169,7 +169,8 @@ pre {
     z-index: 2 !important;
   }
   .w-e-toolbar{
-    z-index: 1 !important;
+    z-index: 2 !important;
+    flex-wrap: wrap;
   }
   .w-e-text-container {
     z-index: 1 !important;

@@ -201,6 +201,10 @@ export default {
 .adviceDialog{
     width: 70%;
     padding:0.4rem 0.5rem 0.4rem 0.5rem;
+    z-index: 5;
+    /deep/.van-button{
+        font-size: 0.4rem;
+    }
 }
 /deep/.van-dialog__header{
     line-height: 0.9rem !important;
@@ -221,4 +225,5 @@ export default {
 /deep/.van-dialog__confirm, .van-dialog__confirm:active{
     margin-top: 0.2rem;
 }
+
 </style>

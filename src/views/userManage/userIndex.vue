@@ -9,10 +9,28 @@
       </div>
     </div>
     <div class="userInformation userTodo">
-      <!-- <div class="mytodo">我的待办</div> -->
-      <van-grid>
-        <van-grid-item icon="photo-o" text="文字" />
-      </van-grid>
+      <div class="mytodo">我的待办</div>
+      <div class="mytodoDetail">
+        <div class="aboutArticle toWriteArticle">
+          <div class="towrite contentCenter">待编辑文章</div>
+          <div class="towrite"><span class="articleNum">{{writeNum}}</span> 篇</div>
+        </div>
+        <div class="aboutArticle">
+          <div class="towrite contentCenter">待修改文章</div>
+          <div class="towrite"><span class="articleNum">{{updateNum}}</span> 篇</div>
+        </div>
+      </div>
+    </div>
+    <div class="userInformation userTodo userInf">
+      <div class="mytodo">我的信息</div>
+      <div class="mytodoDetail">
+        <div class="aboutArticle toWriteArticle">
+          <div class="towrite contentCenter">修改信息</div>
+        </div>
+        <div class="aboutArticle">
+          <div class="towrite contentCenter">我的账单</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -23,7 +41,9 @@ export default {
   data(){
     return{
       userName:'赵丽颖',
-      userId:'132123456'
+      userId:'132123456',
+      writeNum:'5',
+      updateNum:'2'
     }
   },
   methods:{
@@ -54,10 +74,17 @@ export default {
   box-shadow:1px 1px 3px 3px rgba(192,192,192,.4) ;
 }
 .userTodo{
+  width:  92%;
   height: 4rem;
   margin-top: 0.5rem;
   padding: 0rem;
-  border-radius: 0.15rem;
+  // border-radius: 0.15rem;
+  display: flex;
+  flex-direction: column;
+  // margin-left: 8%;
+}
+.userInf{
+  height: 2.8rem;
 }
 .logoPic{
   width: 2rem;
@@ -77,8 +104,32 @@ export default {
   letter-spacing: .03rem;
 }
 .mytodo{
-  font-size: .42rem;
-  width: 100%;
-  border-bottom: .05rem solid #f2f2f2;
+  font-size: .45rem;
+  width: calc(100% - 0.5rem);
+  padding: 0.3rem;
+  border-bottom: 2px solid #f2f2f2;
+}
+.mytodoDetail{
+  display: flex;
+  flex-direction: row;
+  flex:1;
+}
+.contentCenter{
+  line-height: 1.4rem;
+}
+.aboutArticle{
+  width: 50%;
+  text-align: center;
+}
+.toWriteArticle{
+  border-right: 2px solid #f2f2f2;;
+}
+.towrite{
+  font-size: .38rem;
+}
+.articleNum{
+  color: #6C9EE9;
+  font-size: .65rem;
+  font-weight: bold;
 }
 </style>

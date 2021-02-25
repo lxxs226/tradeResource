@@ -186,6 +186,9 @@ export default {
 .adviceDialog{
     width: 70%;
     padding:0.4rem 0.5rem 0.4rem 0.5rem;
+     /deep/.van-button{
+        font-size: 0.4rem;
+    }
 }
 /deep/.van-dialog__header{
     line-height: 0.9rem !important;
