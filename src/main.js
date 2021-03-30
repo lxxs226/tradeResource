@@ -4,6 +4,8 @@ import router from './router'
 import store from './store'
 import './assets/css/reset.css';
 import axios from 'axios';
+import VueAxios from "vue-axios";
+Vue.use(VueAxios, axios);
 import 'lib-flexible';
 
 import { Button } from 'vant';

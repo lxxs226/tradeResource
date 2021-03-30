@@ -83,6 +83,30 @@ export default {
       ]
     }
   },
+  created(){
+    // axios.get('/getNewsList')
+    // .then(res =>{
+    //     console.log(res)
+
+    // })
+    // .catch(err=>{
+    //     console.log(err)
+    // })
+    // this.axios({
+    //     method: 'get',
+    //     url: '/api/getNewsList'
+    // }).then(function(res){
+    //     console.log(res)
+    // }).catch(err=>{
+    //     console.log(err)
+    // })
+
+    this.axios.get('/getNewsList').then((result) => {
+        console.log(result);
+      }).catch((err) => {
+        console.log(err);
+      });
+  },
   methods:{
     
   }
