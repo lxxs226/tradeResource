@@ -1,13 +1,15 @@
 <!--我的-->
 <template>
   <div class="userIndex">
-    <div class="userInformation">
-      <img src="@/assets/pic/bg2.png" class="logoPic"/>
-      <div class="userContent">
-        <div class="userNameContent">{{userName}}</div>
-        <div class="userIdContent">ID:{{userId}}</div>
+    <router-link :to="{name:'userInformation'}"> 
+      <div class="userInformation">
+          <img src="@/assets/pic/touxiang.png" class="logoPic"/>
+          <div class="userContent">
+            <div class="userNameContent">{{userName}}</div>
+            <div class="userIdContent">ID:{{userId}}</div>
+          </div>
       </div>
-    </div>
+    </router-link>
     <div class="userInformation userTodo">
       <div class="mytodo">我的待办</div>
       <div class="mytodoDetail">
@@ -25,7 +27,7 @@
       <div class="mytodo">我的信息</div>
       <div class="mytodoDetail">
         <div class="aboutArticle toWriteArticle">
-          <div class="towrite contentCenter">修改信息</div>
+          <div class="towrite contentCenter"><router-link :to="{name:'userEdit'}"> 修改信息</router-link></div>
         </div>
         <div class="aboutArticle">
           <div class="towrite contentCenter">我的账单</div>
@@ -40,8 +42,8 @@ export default {
   name: 'userIndex',
   data(){
     return{
-      userName:'赵丽颖',
-      userId:'132123456',
+      userName:localStorage.getItem('userName'),
+      userId:localStorage.getItem('userId'),
       writeNum:'5',
       updateNum:'2'
     }

@@ -7,7 +7,7 @@ import axios from 'axios';
 import VueAxios from "vue-axios";
 Vue.use(VueAxios, axios);
 import 'lib-flexible';
-
+import '../mock/index'
 import { Button } from 'vant';
 Vue.use(Button);
 import { Field } from 'vant';
@@ -54,6 +54,8 @@ Vue.use(Dialog);
 import { Grid, GridItem } from 'vant';
 Vue.use(Grid);
 Vue.use(GridItem);
+import { Toast } from 'vant';
+Vue.use(Toast);
 
 Vue.config.productionTip = false
 

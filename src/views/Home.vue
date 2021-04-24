@@ -84,31 +84,54 @@ export default {
     }
   },
   created(){
-    // axios.get('/getNewsList')
-    // .then(res =>{
-    //     console.log(res)
-
-    // })
-    // .catch(err=>{
-    //     console.log(err)
-    // })
+    this.getRecommendTask()
     // this.axios({
-    //     method: 'get',
-    //     url: '/api/getNewsList'
+    //     method: 'post',
+    //     // url: 'http://rap2api.taobao.org/app/mock/281845/user/register' //使用rap匹配
+    //     url: 'user/register',
+    //     // params:{
+    //     //   aa:1
+    //     // },
+    //     data:{
+    //       aa:1
+    //     }
     // }).then(function(res){
     //     console.log(res)
     // }).catch(err=>{
     //     console.log(err)
     // })
 
-    this.axios.get('/getNewsList').then((result) => {
-        console.log(result);
-      }).catch((err) => {
-        console.log(err);
-      });
+    // this.axios({
+    //     method: 'get',
+    //     // url: 'http://rap2api.taobao.org/app/mock/281845/user/register'
+    //     url: 'user/ss'
+    // }).then(function(res){
+    //     console.log(res)
+    // }).catch(err=>{
+    //     console.log(err)
+    // })
+
+  //   this.axios({
+  //       method: 'post',
+  //       url: 'http://rap2api.taobao.org/app/mock/281845/user/login',
+  //       params:{
+  //         name:'ss'
+  //       }
+  //   }).then(function(res){
+  //       console.log(res)
+  //   }).catch(err=>{
+  //       console.log(err)
+  //   })
   },
   methods:{
-    
+    getRecommendTask(){
+      let userId=localStorage.getItem('userId')
+      if(!userId && typeof(userId)!='undefined' && userId!=0){
+        this.$router.push('/login');
+      }else{
+
+      }
+    }
   }
 }
 </script>

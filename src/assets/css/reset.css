@@ -99,6 +99,7 @@ body {
 
 a {
     text-decoration: none;
+    color: black;
 }
 
 pre {
@@ -174,4 +175,17 @@ pre {
   }
   .w-e-text-container {
     z-index: 1 !important;
+  }
+
+  .van-toast{
+    width: 3.1rem;
+    line-height:1.8rem;
+    font-size: 0.4rem;
+  }
+  .van-toast__icon {
+    font-size: 0.8rem;
+    margin-top: 0.5rem; 
+  }
+  .van-toast__text{
+    line-height: 0.8rem;
   }

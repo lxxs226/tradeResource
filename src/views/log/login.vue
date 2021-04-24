@@ -93,11 +93,61 @@ export default {
     //登录提交
     onLoginSubmit(){
       console.log(this.loginForm)
+      let that = this
+      this.axios({
+          method: 'post',
+          url: 'user/login',
+          data:{
+            username: this.loginForm.username,
+            password: this.loginForm.password
+          }
+      }).then(function(res){
+          console.log(res)
+          if(res.data.success===true){
+            that.$toast.success({
+                message: res.data.msg,
+                duration : 500
+            });
+            localStorage.userName = that.loginForm.username
+            localStorage.userId = res.data.userId
+            localStorage.userIdentity = res.data.userIdentity
+            that.$router.push('/Home');
+          }else{
+            that.$toast.fail(res.data.msg);
+          }
+      }).catch(err=>{
+          console.log(err)
+      })
+
     },
     //注册提交
     onRegisterSubmit(){
-      this.checkPassword()
-      console.log(this.registerForm)
+      let that = this
+      if(this.checkPassword()){
+        console.log(this.registerForm)
+        this.axios({
+            method: 'post',
+            url: 'user/register',
+            data:{
+              username: this.registerForm.username,
+              password: this.registerForm.password,
+              Identity: this.registerForm.radio
+            }
+        }).then(function(res){
+            console.log(res)
+            if(res.data.success===true){
+              that.$toast.success({
+                  message: res.data.msg,
+                  duration : 500
+              });
+              that.registerForm={}
+              // localStorage.userId = res.data.userId
+              that.isLogin=true
+            }
+        }).catch(err=>{
+            console.log(err)
+        })
+      }
     },
     goRegister(){
       this.isLogin=false
@@ -108,11 +158,14 @@ export default {
     checkPassword(){
       if(this.registerForm.password2==""){
         this.errMsg="请再次填写密码！"
+        return false
       }else{
         if(this.registerForm.password2!==this.registerForm.password){
           this.errMsg="两次输入密码不一致！"
+          return false
         }else{
           this.errMsg=''
+          return true
         }
       }
     }

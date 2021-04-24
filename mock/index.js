@@ -1,25 +1,96 @@
-const fs = require('fs');
-const path = require('path');
 const Mock = require('mockjs'); //mockjs导入依赖模块
-const JSON5 = require('json5');
 
-// 读取json文件
-function getJsonFile(filePath) {
-    let json = fs.readFileSync(path.resolve(__dirname, filePath), 'utf-8');
-    return JSON5.parse(json);
-  }
-//监听http请求
-module.exports = function(app){
-    if(process.env.MOCK == 'true'){//通过设置环境变量来进行判断是否属用mock
-    //拦截相应的地址返回特定的数据
-    app.get('/getNewsList',function (rep,res){
-        console.log('1111')
-        //每次响应请求时读取mock data的json文件
-        //getJsonFile方法定义了如何读取json文件并解析成数据对象
-        var json = getJsonFile('./userInfo.json5');
-        //将json传入Mock.mock方法中，生成的数据返回给浏览器
-        // res.json(Mock.mock("@url"));
-    
-    });    
-    }
+let MOCK=true;
+//用户账户信息
+var user=[]
+//用户个人信息
+var userInfo=[]
+if(MOCK==true){
+    // Mock.mock(RegExp('user/register' + ".*"),"post",function(options){ //regEXP随机匹配，当axios采用params带参的时候，会将参数带在请求路径上，造成mock拦截不到
+    //用户注册
+    Mock.mock('user/register',"post",function(options){//当使用data传递参数的时候，mock会将参数放进options的body中
+        console.log(options)
+        user.push(JSON.parse(options.body))
+        console.log(user)
+        let res={
+            code:200,
+            success:true,
+            msg:'注册成功，请进行登录',
+        };
+        return res
+    })
+    //用户登录
+    Mock.mock('user/login',"post",function(options){
+        let res={}
+        for (let index = 0; index < user.length; index++) {
+            if(JSON.parse(options.body).username==user[index].username){
+                if(JSON.parse(options.body).password==user[index].password){
+                    res={
+                        code:200,
+                        success:true,
+                        msg:'登陆成功',
+                        userId: Mock.mock('@id'),
+                        userIdentity:user[index].Identity
+                    }
+                }else{
+                console.log('555')
+                    res={
+                        code:200,
+                        success:false,
+                        msg:'密码不正确'
+                    }
+                }
+            }else{
+                res={
+                    code:200,
+                    success:false,
+                    msg:'用户不存在，请先注册'
+                }
+            }
+        }
+        return res
+    })
+    //用户添加/修改个人信息
+    Mock.mock('user/changeUserInfo',"post",function(options){
+        userInfo.push(JSON.parse(options.body))
+        console.log(userInfo)
+        let res={
+            code:200,
+            success:true,
+            msg:'已保存',
+        };
+        return res
+    })
+    //查询用户的个人信息
+    Mock.mock('user/getUserInfo',"get",function(options){
+        let res={}
+        console.log(JSON.parse(options.body).name)
+        if(userInfo.length>0){
+            for (let index = 0; index < userInfo.length; index++) {
+                console.log('1111')
+                if(JSON.parse(options.body).name==userInfo[index].username){
+                    console.log('222')
+                    res={
+                        code:200,
+                        success:true,
+                        userInfo:userInfo[index]
+                    };
+                }else{
+                    res={
+                        code:200,
+                        success:false,
+                        msg:'暂无信息'
+                    };
+                }
+            }
+        }else{
+            res={
+                code:200,
+                success:false,
+                msg:'暂无信息'
+            };
+        }
+       
+        return res
+    })
 }

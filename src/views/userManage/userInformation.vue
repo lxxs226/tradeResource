@@ -2,29 +2,21 @@
 <template>
   <div class="userInformation">
     <div class="pageTop">
-      <!-- <img src="@/assets/pic/touxiang.png" class="headPic" />
-      <div class="mainInf"> -->
-        <!-- <van-field  value="赵丽颖" readonly  />
-        <van-field  value="ID:154688" readonly /> -->
-        <!-- <div class="nameInf">赵丽颖</div>
-        <div class="idInf">ID:154688</div>
-      </div> -->
       <img src="@/assets/pic/touxiang.png" class="logoPic"/>
       <div class="userContent">
-        <div class="userNameContent">{{name}}</div>
+        <div class="userNameContent">{{userInfo.name}}</div>
         <div class="userIdContent">ID:{{userId}}</div>
       </div>
     </div>
-
     <div class="userInf">
-        <van-field label="性别：" :value="sex" readonly />
-        <van-field label="年龄：" :value="age" readonly />
-        <van-field label="职业：" :value="occupation" readonly />
-        <van-field label="联系方式：" :value="tel" readonly />
-
+        <van-field label="性别：" :value="userInfo.sex" readonly />
+        <van-field label="年龄：" :value="userInfo.age" readonly />
+        <van-field label="职业：" :value="userInfo.occupation" readonly />
+        <van-field label="联系方式：" :value="userInfo.tel" readonly />
     </div>
-
-
+    <div style="margin-top:4rem">
+      <van-button type="info" size="large" style="height:1.1rem;width:50%;margin-left:25%;border-radius:8px;font-size:0.38rem" @click="gotoChange">去填写</van-button>
+    </div>
   </div>
 </template>
 
@@ -33,17 +25,44 @@ export default {
   name: 'userInformation',
   data(){
     return{
-      name: '赵丽颖',
-      userId:'132123456',
-      sex: '女',
-      age: '20',
-      occupation: '经理',
-      tel: '13312312123',
-
+      userId:localStorage.getItem('userId'),
+      userInfo:{
+        name: localStorage.getItem('userName'),
+        sex: '暂无',
+        age: '暂无',
+        occupation: '暂无',
+        tel: '暂无',
+      }
     }
   },
+  created(){
+      this.getUserInfo()
+  },
   methods:{
-     
+    //获取用户信息
+    getUserInfo(){
+      let that = this
+      this.axios({
+          method: 'get',
+          url: 'user/getUserInfo',
+          data:{
+            username: this.userInfo.name,
+          }
+      }).then(function(res){
+          console.log(res)
+          if(res.data.success===true){
+            that.userInfo=res.data.userInfo
+          }else{
+            // that.$toast.fail(res.data.msg);
+          }
+      }).catch(err=>{
+          console.log(err)
+      })
+    },
+    //跳转到修改信息页面
+    gotoChange(){
+      this.$router.push('/userEdit');
+    }
     
   }
 }
@@ -61,10 +80,10 @@ export default {
   margin-top: 4%;
 }
 .van-cell{
-  font-size: .35rem;
+  font-size: .4rem;
   line-height: .5rem;
-  margin-top: .3rem;
-  margin-left: 3%;
+  margin-top: .35rem;
+  margin-left: 8%;
 }
 .van-cell::after{
   border-bottom: 0rem;
