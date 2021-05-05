@@ -14,6 +14,7 @@ import articleDetail from '../views/articleManage/articleDetail.vue'
 import login from '../views/log/login.vue'
 import accountDetail from '../views/userManage/accountDetail.vue'
 import taskDetail from '../views/taskInformation/taskDetail.vue'
+import publishUserInfo from '../views/userManage/publishUserInfo.vue'
 
 Vue.use(VueRouter)
 
@@ -44,11 +45,20 @@ const routes = [
       keepAlive: false
     }
   },
-  //查看他人资料
+  //查看自己资料
   {
     path: '/userInformation',
     name: 'userInformation',
     component: userInformation,
+    meta: {
+      keepAlive: false
+    }
+  },
+  //查看他人资料
+  {
+    path: '/publishUserInfo',
+    name: 'publishUserInfo',
+    component: publishUserInfo,
     meta: {
       keepAlive: false
     }

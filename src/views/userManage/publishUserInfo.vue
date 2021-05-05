@@ -1,6 +1,6 @@
 <!--用户资料-->
 <template>
-  <div class="userInformation">
+  <div class="publishUserInfo">
     <div class="pageTop">
       <img src="@/assets/pic/touxiang.png" class="logoPic"/>
       <div class="userContent">
@@ -14,9 +14,9 @@
         <van-field label="职业：" :value="userInfo.occupation" readonly />
         <van-field label="联系方式：" :value="userInfo.tel" readonly />
     </div>
-    <div style="margin-top:4rem">
+    <!-- <div style="margin-top:4rem">
       <van-button type="info" size="large" style="height:1.1rem;width:50%;margin-left:25%;border-radius:8px;font-size:0.38rem" @click="gotoChange">去填写</van-button>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -25,9 +25,9 @@ export default {
   name: 'userInformation',
   data(){
     return{
-      userId:localStorage.getItem('userId'),
+      userId:"",
       userInfo:{
-        name: localStorage.getItem('userName'),
+        name: '暂无',
         sex: '暂无',
         age: '暂无',
         occupation: '暂无',
@@ -36,34 +36,36 @@ export default {
     }
   },
   created(){
-      this.getUserInfo()
-      
+    this.userId = this.$route.params.userId;
+    console.log(this.userId)
+    this.getPublishUserInfo()
+
   },
   methods:{
     //获取用户信息
-    getUserInfo(){
+    getPublishUserInfo(){
       let that = this
       this.axios({
-          method: 'get',
-          url: 'user/getUserInfo',
-          data:{
-            username: this.userInfo.name,
-          }
+        method: 'get',
+        url: 'user/getPublishUserInfo',
+        data:{
+          userId: this.userId,
+        }
       }).then(function(res){
-          console.log(res)
-          if(res.data.success===true){
-            that.userInfo=res.data.userInfo
-          }else{
-            // that.$toast.fail(res.data.msg);
-          }
+        console.log(res)
+        if(res.data.success===true){
+          that.userInfo=res.data.userInfo
+        }else{
+          // that.$toast.fail(res.data.msg);
+        }
       }).catch(err=>{
-          console.log(err)
+        console.log(err)
       })
     },
     //跳转到修改信息页面
-    gotoChange(){
-      this.$router.push('/userEdit');
-    }
+    // gotoChange(){
+    //   this.$router.push('/userEdit');
+    // }
     
   }
 }

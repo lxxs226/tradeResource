@@ -2,26 +2,26 @@
     <div class="taskDetail">
         <div class="detailTop">
             <div class="detailTitle">
-                {{taskInformation.taskTitle}}
+                {{taskInformation.recommendSubject}}
             </div>
             <div class="detailpublish">
                 <div>
-                    发布人：<span style="color:#83cfff;">{{taskInformation.publisher}}</span>
+                    发布人：<span style="color:#83cfff;" @click="gotoUserInfo">{{taskInformation.publisher}}</span>
                 </div>
                 <div>
-                    发布任务日期：{{taskInformation.publishDate}}
+                    发布任务日期：{{taskInformation.Releaseday}}
                 </div>
             </div>
         </div>
         <div class="detailContent">
             <div class="contentTitle">文章要求：</div>
-            <div class="contentRequired">{{taskInformation.articleRequired}}</div>
-            <div class="contentTitle">媒体分类：{{taskInformation.mediaClass}}</div>
-            <div class="contentTitle">行业分类：{{taskInformation.industryClass}}</div>
-            <div class="contentTitle">文章赏金：{{taskInformation.money}}元</div>
-            <div class="contentTitle">截稿天数：{{taskInformation.endDay}}天</div>
+            <div class="contentRequired">{{taskInformation.require}}</div>
+            <div class="contentTitle">媒体分类：{{taskInformation.mediaCategory}}</div>
+            <div class="contentTitle">行业分类：{{taskInformation.industryCategory}}</div>
+            <div class="contentTitle">文章赏金：{{taskInformation.income}}元</div>
+            <div class="contentTitle">截稿天数：{{taskInformation.pressNumber}}天</div>
         </div>
-        <div class="buttonLineUser" v-if="status">
+        <div class="buttonLineUser" v-if="status==1">
             <van-button type="info" size="large">接受任务</van-button>
         </div>
         <div class="buttonLinePulisher" v-else>
@@ -36,17 +36,52 @@ export default {
     data(){
         return{
             taskInformation:{
-                taskTitle:'情侣热恋期之后如何保持感情？',//文章标题
+                recommendSubject:'情侣热恋期之后如何保持感情？',//文章标题
                 publisher:'赵丽颖',//发布人
-                publishDate:'2021年1月31日',//发布时间
-                articleRequired:'通过这个问题撒旦撒旦撒范德萨范德萨水水水水水水水水等级为呃呃呃呃呃呃呃呃呃呃呃呃呃呃的就是水水水水水水水水水水水水水水水水',//文章要求
-                mediaClass:'知乎',//媒体分类
-                industryClass:'情感 营销',//行业分类
-                money:'10',//文章赏金
-                endDay:'3'//截稿天数
+                Releaseday:'2021年1月31日',//发布时间
+                require:'通过这个问题撒旦撒旦撒范德萨范德萨水水水水水水水水等级为呃呃呃呃呃呃呃呃呃呃呃呃呃呃的就是水水水水水水水水水水水水水水水水',//文章要求
+                mediaCategory:'知乎',//媒体分类
+                industryCategory:'情感 营销',//行业分类
+                income:'10',//文章赏金
+                pressNumber:'3'//截稿天数
             },
             //用户身份判断，显示不同按钮：true为接单方 false为下单方
-            status:false
+            status:false,
+            taskId:''
+        }
+    },
+    created(){
+        this.taskId = this.$route.params.id ;
+        this.status = localStorage.getItem('userIdentity')
+        console.log(this.status)
+        this.getTaskInfo()
+    },
+    methods:{
+        //获取任务详情
+        getTaskInfo(){
+            console.log(this.taskId)
+            let that = this
+            this.axios({
+                method: 'get',
+                url: 'task/getTaskInfo',
+                data:{
+                    taskId: this.taskId,//传递过来的任务id
+                }
+            }).then(function(res){
+                console.log(res)
+                if(res.data.success===true){
+                    that.taskInformation=res.data.taskInformation
+                }else{
+                    // that.$toast.fail(res.data.msg);
+                }
+            }).catch(err=>{
+                console.log(err)
+            })
+        },
+        //跳转到用户信息
+        gotoUserInfo(){
+            console.log(this.taskInformation.userId)
+            this.$router.push({name:'publishUserInfo',params: { userId: this.taskInformation.userId }})
         }
     }
 }
@@ -79,6 +114,7 @@ export default {
     line-height: 0.5rem;
     color: #808080;
     font-size: 0.35rem;
+    margin-bottom: 0.5rem;
 }
 .buttonLineUser{
     position:fixed;

@@ -19,29 +19,61 @@
       <div class="recommendListTitle">
         推荐任务
       </div>
-      <van-tabs v-model="active" line-height=".06rem" line-width="1.3rem" swipeable>
+      <van-tabs v-model="active" line-height=".06rem" line-width="1.3rem" swipeable @change="getRecommendTask()">
         <van-tab>
           <template #title><img src="../assets/pic/zhihu.png" class="recommendListTitleIcon" style="width:22%;height:22%"/>知乎</template>
           <div class="recommendItem" v-for="(item,index) in recommendLists" :key="index">
-            <div class="recommendSubjectTitle">{{item.recommendSubject}}</div>
-            <div class="recommendDetail">
-              <div class="recommendDetailLeft">
-                <div>行业分类：{{item.industryCategory}}</div>
-                <div>媒体分类：{{item.mediaCategory}}</div>
+            <router-link :to="{name:'taskDetail',params:{id:item.taskId}}">
+              <div class="recommendSubjectTitle">{{item.recommendSubject}}</div>
+              <div class="recommendDetail">
+                <div class="recommendDetailLeft">
+                  <div>行业分类：{{item.industryCategory}}</div>
+                  <div>媒体分类：{{item.mediaCategory}}</div>
+                </div>
+                <div class="recommendDetailRight">
+                  <div>截稿天数：{{item.pressNumber}}天</div>
+                  <div class="recommendIncome">稿酬：{{item.income}}元</div>
+                </div>
               </div>
-              <div class="recommendDetailRight">
-                <div>截稿天数：{{item.pressNumber}}天</div>
-                <div class="recommendIncome">稿酬：{{item.income}}元</div>
-              </div>
-            </div>
+            </router-link>
           </div>
         </van-tab>
         <van-tab>
           <template #title><img src="../assets/pic/weibo2.jpg" class="recommendListTitleIcon" style="width:20%;height:20%"/>微博</template>
-          内容 2</van-tab>
+          <div class="recommendItem" v-for="(item,index) in recommendLists" :key="index">
+            <router-link :to="{name:'taskDetail',params:{id:item.taskId}}">
+              <div class="recommendSubjectTitle">{{item.recommendSubject}}</div>
+              <div class="recommendDetail">
+                <div class="recommendDetailLeft">
+                  <div>行业分类：{{item.industryCategory}}</div>
+                  <div>媒体分类：{{item.mediaCategory}}</div>
+                </div>
+                <div class="recommendDetailRight">
+                  <div>截稿天数：{{item.pressNumber}}天</div>
+                  <div class="recommendIncome">稿酬：{{item.income}}元</div>
+                </div>
+              </div>
+            </router-link>
+          </div>
+        </van-tab>
         <van-tab>
           <template #title><img src="../assets/pic/douban.png" class="recommendListTitleIcon" style="width:25%;height:25%"/>豆瓣</template>
-          内容 3</van-tab>
+          <div class="recommendItem" v-for="(item,index) in recommendLists" :key="index">
+            <router-link :to="{name:'taskDetail',params:{id:item.taskId}}">
+              <div class="recommendSubjectTitle">{{item.recommendSubject}}</div>
+              <div class="recommendDetail">
+                <div class="recommendDetailLeft">
+                  <div>行业分类：{{item.industryCategory}}</div>
+                  <div>媒体分类：{{item.mediaCategory}}</div>
+                </div>
+                <div class="recommendDetailRight">
+                  <div>截稿天数：{{item.pressNumber}}天</div>
+                  <div class="recommendIncome">稿酬：{{item.income}}元</div>
+                </div>
+              </div>
+            </router-link>
+          </div>
+        </van-tab>
       </van-tabs>
       
     </div>
@@ -55,36 +87,37 @@ export default {
     return{
       //标签页默认选择第一项
       active:0,
-      recommendLists:[{
-          recommendSubject:'情侣热恋期之后如何保存感情？',
-          industryCategory:'营销 情感',
-          mediaCategory:'知乎',
-          pressNumber:5,
-          income:10
-        },{
-          recommendSubject:'情侣热恋期之后如何保存感情？',
-          industryCategory:'营销 情感',
-          mediaCategory:'知乎',
-          pressNumber:5,
-          income:10
-        },{
-          recommendSubject:'情侣热恋期之后如何保存感情？',
-          industryCategory:'营销 情感',
-          mediaCategory:'知乎',
-          pressNumber:5,
-          income:10
-        },{
-          recommendSubject:'情侣热恋期之后如何保存感情？',
-          industryCategory:'营销 情感',
-          mediaCategory:'知乎',
-          pressNumber:5,
-          income:10
-        }
+      recommendLists:[
+      //  {
+      //     recommendSubject:'情侣热恋期之后如何保存感情？',
+      //     industryCategory:'营销 情感',
+      //     mediaCategory:'知乎',
+      //     pressNumber:5,
+      //     income:10
+      //   },{
+      //     recommendSubject:'情侣热恋期之后如何保存感情？',
+      //     industryCategory:'营销 情感',
+      //     mediaCategory:'知乎',
+      //     pressNumber:5,
+      //     income:10
+      //   },{
+      //     recommendSubject:'情侣热恋期之后如何保存感情？',
+      //     industryCategory:'营销 情感',
+      //     mediaCategory:'知乎',
+      //     pressNumber:5,
+      //     income:10
+      //   },{
+      //     recommendSubject:'情侣热恋期之后如何保存感情？',
+      //     industryCategory:'营销 情感',
+      //     mediaCategory:'知乎',
+      //     pressNumber:5,
+      //     income:10
+      //   }
       ]
     }
   },
   created(){
-    this.getRecommendTask()
+    this.getUserId()
     // this.axios({
     //     method: 'post',
     //     // url: 'http://rap2api.taobao.org/app/mock/281845/user/register' //使用rap匹配
@@ -101,37 +134,37 @@ export default {
     //     console.log(err)
     // })
 
-    // this.axios({
-    //     method: 'get',
-    //     // url: 'http://rap2api.taobao.org/app/mock/281845/user/register'
-    //     url: 'user/ss'
-    // }).then(function(res){
-    //     console.log(res)
-    // }).catch(err=>{
-    //     console.log(err)
-    // })
-
-  //   this.axios({
-  //       method: 'post',
-  //       url: 'http://rap2api.taobao.org/app/mock/281845/user/login',
-  //       params:{
-  //         name:'ss'
-  //       }
-  //   }).then(function(res){
-  //       console.log(res)
-  //   }).catch(err=>{
-  //       console.log(err)
-  //   })
   },
   methods:{
-    getRecommendTask(){
+    getUserId(){
       let userId=localStorage.getItem('userId')
       if(!userId && typeof(userId)!='undefined' && userId!=0){
         this.$router.push('/login');
       }else{
-
+        this.getRecommendTask()
       }
-    }
+    },
+    //获取推荐任务列表
+    getRecommendTask(){
+      console.log(this.active)
+      let that = this
+      this.axios({
+          method: 'get',
+          url: 'task/getRecommendTask',
+          data:{
+            active: this.active,//选中的标签项
+          }
+      }).then(function(res){
+          console.log(res)
+          if(res.data.success===true){
+            that.recommendLists=res.data.recommendLists
+          }else{
+            // that.$toast.fail(res.data.msg);
+          }
+      }).catch(err=>{
+          console.log(err)
+      })
+    },
   }
 }
 </script>
