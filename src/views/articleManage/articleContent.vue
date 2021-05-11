@@ -3,18 +3,18 @@
     <div class="articleContent">
         <div class="detailTop">
             <div class="detailTitle">
-                {{taskInformation.taskTitle}}
+                {{taskInformation.recommendSubject}}
             </div>
             <div class="detailpublish">
                 <div>
                     发布人：<span style="color:#83cfff;">{{taskInformation.publisher}}</span>
                 </div>
                 <div>
-                    发布任务日期：{{taskInformation.publishDate}}
+                    发布任务日期：{{taskInformation.Releaseday}}
                 </div>
             </div>
-            <div class="contentRequired">任务要求：{{taskInformation.articleRequired}}</div>
-            <div class="detailpublish">
+            <div class="contentRequired">任务要求：{{taskInformation.require}}</div>
+            <div class="detailpublish" v-if="draftInformation.status!=0">
                 <div>
                     交稿人：<span style="color:#83cfff;">{{finishArticle.writer}}</span>
                 </div>
@@ -24,15 +24,15 @@
             </div>
         </div>
         <div id="editordiv"></div>
-        <!-- <div v-html="aa"></div> -->
+        <!-- <div v-html="content"></div> -->
         <!-- <button type="button" @click="submit">提交</button> -->
         <!--接单者待编辑-->
-        <!-- <div class="buttonLinePulisher" >
+        <div class="buttonLinePulisher" v-if="draftInformation.status==0">
             <van-button type="info" size="normal" class="buttonDelete">保存</van-button>
-            <van-button type="info" size="normal">提交</van-button>
-        </div> -->
+            <van-button type="info" size="normal" @click="showPublish=true">提交</van-button>
+        </div>
         <!--接单者待修改-->
-        <div class="buttonLineUpdate" >
+        <div class="buttonLineUpdate" v-else>
             <van-button type="info" size="normal" class="buttonDelete" @click="showAdvice=true">修改意见</van-button>
             <van-button type="info" size="normal" class="buttonDelete">保存</van-button>
             <van-button type="info" size="normal">提交</van-button>
@@ -44,6 +44,9 @@
                 <div class="adviceContent">修改建议：{{updateAdvice.advice}}</div>
             </div>
         </van-dialog>
+        <van-dialog v-model="showPublish" title="确定提交" class="adviceDialog" show-cancel-button @confirm="publishDraft">
+            <div class="dialogText">是否确定提交当前文稿？</div>
+        </van-dialog>
     </div>
     
 
@@ -53,15 +56,26 @@ import E from 'wangeditor'
 export default {
     data(){
         return{
-            aa:'',
+            content:'',
             taskInformation:{
-                taskTitle:'情侣热恋期之后如何保持感情？',//文章标题
-                publishDate:'2021年1月31日',//发布时间
+                recommendSubject:'情侣热恋期之后如何保持感情？',//文章标题
+                Releaseday:'2021年1月31日',//发布时间
                 publisher:'赵丽颖',//发布人
-                articleRequired:'通过这个问题撒旦撒旦撒范德萨范德萨水水水水水水水水等级为呃呃呃呃呃呃呃呃呃呃呃呃呃呃的就是水水水水水水水水水水水水水水水水。',//文章要求
+                require:'通过这个问题撒旦撒旦撒范德萨范德萨水水水水水水水水等级为呃呃呃呃呃呃呃呃呃呃呃呃呃呃的就是水水水水水水水水水水水水水水水水。',//文章要求
+            },
+            draftInformation:{
+                draftId:'',  //文稿id
+                orderId:'',  //订单id 
+                contect:'', //内容
+                status:0,  // 文稿状态 0：待提交 1：已提交，待回复 2：未通过，待修改 3：已通过
+                draftDate:'',  //文稿提交时间
+                passedDate:'',  //文稿通过时间
+                adviceid:'', //意见id
             },
             //修改意见对话框
             showAdvice:false,
+            //确认提交文稿
+            showPublish:false,
             updateAdvice:{
                 adviceDate:'2021年1月17日',
                 finishUpdateDate:'2021年1月20日',
@@ -71,11 +85,22 @@ export default {
             finishArticle:{
                 writer:'吴亦凡',
                 finishDate:'2021年1月13日'
-            }
-            //editFlag:'2'
+            },
+            //editFlag:'2',
+            taskId:'',
+            //用户身份
+            status:'',
+            draftId:''
         }
     },
-     mounted(){
+    created(){
+        this.taskId = this.$route.params.taskId
+        this.draftId = this.$route.params.draftId
+        this.status = localStorage.getItem('userIdentity')
+        this.getTaskInfo()
+        this.getDraftInfo()
+    },
+    mounted(){
         this.$nextTick(v=>{
             let that = this
             //一、显示在div内
@@ -108,9 +133,8 @@ export default {
             // editor.customConfig.zIndex = 5
             // 七、监听内容变化，获取html代码
             editor.config.onchange = function (html){//第二步，监控变化，获取到实时输入内容对应的html，同步更新到textarea
-                that.aa=html
-            }
-            
+                that.content=html
+            } 
             //八、获取输入内容
             //不检测变化，获取最终html：editor.txt.html()
             //获取最终text内容：editor.txt.text()，只是输入内容没有标签
@@ -118,17 +142,92 @@ export default {
             editor.create()
             //使用editor.txt.html，可以讲之前插入的内容反显到编辑器里，用于修改
             // if(this.editFlag === '1'){
-            //         editor.txt.html(this.aa);
+            //         editor.txt.html(this.content);
             // }
-
         })
     },
     methods:{
         submit(){
-            console.log(this.aa)
+            console.log(this.content)
+        },
+        //获取任务详情
+        getTaskInfo(){
+            console.log(this.taskId)
+            let that = this
+            this.axios({
+                method: 'get',
+                url: 'task/getTaskInfo',
+                data:{
+                    taskId: this.taskId,//传递过来的任务id
+                }
+            }).then(function(res){
+                console.log(res)
+                if(res.data.success===true){
+                    that.taskInformation=res.data.taskInformation
+                }else{
+                    // that.$toast.fail(res.data.msg);
+                }
+            }).catch(err=>{
+                console.log(err)
+            })
+        },
+        //获取文稿详情
+        getDraftInfo(){
+            console.log(this.draftId)
+            let that = this
+            this.axios({
+                method: 'get',
+                url: 'task/getDraftInfo',
+                data:{
+                    draftId: this.draftId,//传递过来的文稿id
+                }
+            }).then(function(res){
+                console.log(res)
+                if(res.data.success===true){
+                    that.draftInformation=res.data.draftInformation
+                }else{
+                    // that.$toast.fail(res.data.msg);
+                }
+            }).catch(err=>{
+                console.log(err)
+            })
+        },
+        //提交文稿
+        publishDraft(){
+            let that = this
+            this.draftInformation.contect=this.content
+            this.draftInformation.status=1
+            this.draftInformation.draftDate=this.getToday()
+            console.log(this.draftInformation)
+            this.axios({
+                method: 'post',
+                url: 'task/publishDraft',
+                data:{
+                    draftInformation: this.draftInformation,
+                }
+            }).then(function(res){
+                console.log(res)
+                if(res.data.success===true){
+                    that.$toast.success({
+                        message: res.data.msg,
+                        duration : 500
+                    });
+                    that.$router.push('/companyTaskManage');
+                }else{
+                    that.$toast.fail(res.data.msg);
+                }
+            }).catch(err=>{
+                console.log(err)
+            })
+        },
+        //获取今天日期
+        getToday(){
+            let today = new Date();
+            today.setTime(today.getTime());
+            let day = today.getFullYear()+"-" + (today.getMonth()+1) + "-" + today.getDate();
+            return day
         }
     }
-
 }
 </script>
 <style lang="scss" scoped>
@@ -225,5 +324,9 @@ export default {
 /deep/.van-dialog__confirm, .van-dialog__confirm:active{
     margin-top: 0.2rem;
 }
-
+.dialogText{
+    font-size: 0.35rem;
+    line-height: 2rem;
+    text-align: center;
+}
 </style>

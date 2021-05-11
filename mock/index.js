@@ -17,7 +17,7 @@ var recommendTask=[{
     mediaId:0,//媒体类别id
     mediaCategory:'知乎',//媒体类别
     pressNumber:5,//截至天数
-    Releaseday:'2020-12-02',//发布日期
+    Releaseday:'2020-12-29',//发布日期
     income:10,//预计稿费
     status:0 //任务状态  0：已发布，1：已删除
 },
@@ -49,7 +49,7 @@ var recommendTask=[{
     pressNumber:6,//截至天数
     Releaseday:'2020-12-02',//发布日期
     income:100,//预计稿费
-    status:1 //任务状态  0：已发布，1：已删除
+    status:0 //任务状态 0：已发布，1:已被接单 ，2：已删除
 },
 {
     taskId:4,//任务id
@@ -64,13 +64,15 @@ var recommendTask=[{
     pressNumber:2,//截至天数
     Releaseday:'2020-12-02',//发布日期
     income:180,//预计稿费
-    status:1 //任务状态  0：已发布，1:已被接单 ，2：已删除
+    status:0 //任务状态  0：已发布，1:已被接单 ，2：已删除
 },]
 // columns1: ['0知乎', '1微博' , '2豆瓣', '3今日头条号','4懂车帝','5搜狐', '6网易', '7企鹅',
 //          '8新浪看点', '9一点资讯', '10东方头条', '11太平洋号', '12趣头条', '13简书', '14其他','15媒体分类，即全部']
 // columns2: ['0情感','1生活', '2营销' , '3资讯','4互联网','5财经', '6汽车', '7旅游', '8动漫', '9美食',
 //          '10科技', '11美妆', '12时尚', '13房产', '14娱乐', '15搞笑', '16影视', '17健康', '18职场',
 //           '19宠物', '20摄影', '21其他','22行业分类，即全部']
+
+//用户列表
 var publishUser=[
     {
         userId:1,//用户id
@@ -95,6 +97,17 @@ var publishUser=[
         tel: "17688506700"
     }
 ]
+//订单列表
+
+    // orderId:'自增' //订单id
+    // taskId:''  //对应任务id
+    // userId:''  //接单人id
+    // statu:0  //订单状态 0：已开始  1：已完成
+    // reateday:''//当前日期  接单日期
+    // Endday:''  //实际完成日期
+    // Projectendday:'' //应当结束日期
+    // IsOverDue:0   //是否过期  0：未过期 1：已过期
+    // Endmoney:'' //实际稿费
 if(MOCK==true){
     // Mock.mock(RegExp('user/register' + ".*"),"post",function(options){ //regEXP随机匹配，当axios采用params带参的时候，会将参数带在请求路径上，造成mock拦截不到
     //用户注册
@@ -322,6 +335,178 @@ if(MOCK==true){
             success:true,
             companyTaskLists:taskList
         };      
+        return res
+    })
+    //发布任务
+    Mock.mock('task/publishTask',"post",function(options){
+        let publishTask=JSON.parse(options.body).publishTask
+        let flag=false
+        let res={}
+        recommendTask.forEach(element => {
+            if(element.taskId==publishTask.taskId){
+                flag=true
+                return flag
+            }
+        });
+        console.log(flag)
+        if(flag==true){
+            console.log('111')
+            recommendTask[publishTask.taskId-1]=publishTask
+            res={
+                code:200,
+                success:true,
+                msg:'修改成功！',
+            };
+        }else{
+            publishTask['taskId']=recommendTask.length+1
+            console.log(publishTask.taskId)
+            recommendTask.push(publishTask)
+            console.log(recommendTask)
+            res={
+                code:200,
+                success:true,
+                msg:'发布成功！',
+            };
+        }
+        return res
+    })
+    //删除任务
+    Mock.mock('task/deleteTask',"post",function(options){
+        let taskId=JSON.parse(options.body).taskId
+        console.log(taskId)
+        let res={}
+        try {
+            // 执行到第3次，结束循环
+            recommendTask.forEach(element => {
+                if(element.taskId==taskId){
+                    console.log('2222')
+                    recommendTask.splice((taskId-1),1)
+                    res={
+                        code:200,
+                        success:true,
+                        msg:'删除成功！',
+                    };
+                    throw new Error("End");
+                }else{
+                    res={
+                        code:200,
+                        success:false,
+                        msg:'删除失败！',
+                    };
+                }
+            });
+        } catch(e) {
+            if(e.message!="End") throw e;
+        }
+        return res
+    })
+    //接单任务1
+    Mock.mock('task/acceptTask',"post",function(options){
+        let taskId=JSON.parse(options.body).taskId
+        let order=JSON.parse(options.body).order
+        let list=[]
+        console.log(order)
+        //1、修改任务表中任务状态
+        recommendTask.forEach(element => {
+            if(element.taskId==taskId){
+                element.status=1
+            }
+        });
+        //2、订单表插入新数据
+        if(localStorage.getItem('orderList')== null){
+            console.log('1111')
+            order.orderId=1
+            console.log(order)
+            list.push(order)
+            console.log(list)
+            localStorage.orderList=JSON.stringify(list)
+        }else{
+            console.log('222')
+            list=JSON.parse(localStorage.getItem("orderList"))
+            console.log(list)
+            console.log(typeof(list))
+            order.orderId=list.length+1
+            list.push(order)
+            localStorage.orderList=JSON.stringify(list)
+        }
+        console.log(localStorage.getItem('orderList'))
+        let res={
+            code:200,
+            success:true,
+            // msg:'接单成功！',
+            taskId:taskId,
+            orderId:order.orderId
+        }
+        return res
+    })
+    //接单任务2
+    Mock.mock('task/addDraft',"post",function(options){
+        let draft=JSON.parse(options.body).draft
+        let dlist=[]
+        console.log(draft)
+        //3、文稿表插入新数据
+        if(localStorage.getItem('draftList')== null){
+            console.log('1111')
+            draft.draftId=1
+            console.log(draft)
+            dlist.push(draft)
+            console.log(dlist)
+            localStorage.draftList=JSON.stringify(dlist)
+        }else{
+            console.log('222')
+            dlist=JSON.parse(localStorage.getItem("draftList"))
+            console.log(dlist)
+            draft.draftId=dlist.length+1
+            dlist.push(draft)
+            localStorage.draftList=JSON.stringify(dlist)
+        }
+        console.log(localStorage.getItem('draftList'))
+        let res={
+            code:200,
+            success:true,
+            msg:'接单成功！',
+            draftId:draft.draftId
+        }
+        return res
+    })
+    //文稿详情--根据文稿id查询详情
+    Mock.mock('task/getDraftInfo',"get",function(options){
+        console.log(JSON.parse(options.body).draftId)
+        let res={}
+        let draftlist=JSON.parse(localStorage.getItem("draftList"))
+        draftlist.forEach(element => {
+            console.log(element)
+            if(element.draftId == (JSON.parse(options.body).draftId)){
+                res={
+                    code:200,
+                    success:true,
+                    draftInformation:element
+                };  
+            }
+        });
+        console.log(res)
+        return res
+    })
+    //提交文稿
+    Mock.mock('task/publishDraft',"post",function(options){
+        let draftInformation=JSON.parse(options.body).draftInformation
+        console.log(draftInformation)
+        let res={}
+        let draftlist=JSON.parse(localStorage.getItem("draftList"))
+        draftlist.forEach(element => {
+            console.log(element)
+            if(element.draftId == (JSON.parse(options.body).draftInformation.draftId)){
+                element=draftInformation
+                localStorage.draftList=JSON.stringify(draftlist)
+                console.log(localStorage.getItem('draftList'))
+                res={
+                    code:200,
+                    success:true,
+                    msg:'提交成功！',
+                };
+            }
+        });
+
         return res
     })
 }
