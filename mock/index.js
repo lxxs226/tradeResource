@@ -487,16 +487,34 @@ if(MOCK==true){
         console.log(res)
         return res
     })
+    //查询订单详情--根据订单id
+    Mock.mock('task/getOrderInfo',"get",function(options){
+        console.log(JSON.parse(options.body).orderId)
+        let res={}
+        let orderList=JSON.parse(localStorage.getItem("orderList"))
+        orderList.forEach(element => {
+            console.log(element)
+            if(element.orderId == (JSON.parse(options.body).orderId)){
+                res={
+                    code:200,
+                    success:true,
+                    order:element
+                };  
+            }
+        });
+        console.log(res)
+        return res
+    })
     //提交文稿
     Mock.mock('task/publishDraft',"post",function(options){
         let draftInformation=JSON.parse(options.body).draftInformation
         console.log(draftInformation)
         let res={}
         let draftlist=JSON.parse(localStorage.getItem("draftList"))
-        draftlist.forEach(element => {
-            console.log(element)
-            if(element.draftId == (JSON.parse(options.body).draftInformation.draftId)){
-                element=draftInformation
+        for (let index = 0; index < draftlist.length; index++) {
+            if(draftlist[index].draftId==draftInformation.draftId){
+                draftlist[index]=draftInformation
+                console.log(draftlist)
                 localStorage.draftList=JSON.stringify(draftlist)
                 console.log(localStorage.getItem('draftList'))
                 res={
@@ -505,8 +523,164 @@ if(MOCK==true){
                     msg:'提交成功！',
                 };
             }
-        });
+        }
 
+        return res
+    })
+    //文稿管理（发布者）--按照用户id、任务状态、搜索内容，获取任务列表
+    Mock.mock('task/getArticleList',"get",function(options){
+        console.log(JSON.parse(options.body))
+        let search=JSON.parse(options.body)
+        let res={}
+        let articleLists=[]
+        let article = {}
+        let aa={}
+        let draft=JSON.parse(localStorage.getItem("draftList"))
+        let order=JSON.parse(localStorage.getItem("orderList"))
+        if(search.searchTask.length != 0){
+            if(search.active==0){
+                recommendTask.forEach(element => {
+                    console.log(element)
+                    if(element.publisher==JSON.parse(options.body).userId && element.recommendSubject.indexOf(search.searchTask) != -1){
+                        console.log(element.taskId)
+                        for(let o = 0; o < order.length; o++){
+                            if(order[o].taskId==element.taskId){
+                                console.log(order[o].orderId)
+                                for(let d = 0; d < order.length; d++){
+                                    if(draft[d].orderId==order[o].orderId){
+                                        if(draft[d].status==1){
+                                            article= Object.assign(aa,element,order[o],draft[d])
+                                            console.log(article)
+                                            articleLists.push(article)
+                                            console.log(articleLists)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }else if(search.active==1){
+                recommendTask.forEach(element => {
+                    console.log(element)
+                    if(element.publisher==JSON.parse(options.body).userId && element.recommendSubject.indexOf(search.searchTask) != -1){
+                        console.log(element.taskId)
+                        for(let o = 0; o < order.length; o++){
+                            if(order[o].taskId==element.taskId){
+                                console.log(order[o].orderId)
+                                for(let d = 0; d < order.length; d++){
+                                    if(draft[d].orderId==order[o].orderId){
+                                        if(draft[d].status==0){
+                                            article= Object.assign(aa,element,order[o],draft[d])
+                                            console.log(article)
+                                            articleLists.push(article)
+                                            console.log(articleLists)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }else{
+                recommendTask.forEach(element => {
+                    console.log(element)
+                    if(element.publisher==JSON.parse(options.body).userId && element.recommendSubject.indexOf(search.searchTask) != -1){
+                        console.log(element.taskId)
+                        for(let o = 0; o < order.length; o++){
+                            if(order[o].taskId==element.taskId){
+                                console.log(order[o].orderId)
+                                for(let d = 0; d < order.length; d++){
+                                    if(draft[d].orderId==order[o].orderId){
+                                        if(draft[d].status==3){
+                                            article= Object.assign(aa,element,order[o],draft[d])
+                                            console.log(article)
+                                            articleLists.push(article)
+                                            console.log(articleLists)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }else{
+            console.log('22222')
+            if(search.active==0){
+                recommendTask.forEach(element => {
+                    console.log(element)
+                    if(element.publisher==JSON.parse(options.body).userId){
+                        console.log(element.taskId)
+                        for(let o = 0; o < order.length; o++){
+                            if(order[o].taskId==element.taskId){
+                                console.log(order[o].orderId)
+                                for(let d = 0; d < order.length; d++){
+                                    if(draft[d].orderId==order[o].orderId){
+                                        if(draft[d].status==1){
+                                            article= Object.assign(aa,element,order[o],draft[d])
+                                            console.log(article)
+                                            articleLists.push(article)
+                                            console.log(articleLists)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }else if(search.active==1){
+                recommendTask.forEach(element => {
+                    console.log(element)
+                    if(element.publisher==JSON.parse(options.body).userId){
+                        console.log(element.taskId)
+                        for(let o = 0; o < order.length; o++){
+                            if(order[o].taskId==element.taskId){
+                                console.log(order[o].orderId)
+                                for(let d = 0; d < order.length; d++){
+                                    if(draft[d].orderId==order[o].orderId){
+                                        if(draft[d].status==0){
+                                            article= Object.assign(aa,element,order[o],draft[d])
+                                            console.log(article)
+                                            articleLists.push(article)
+                                            console.log(articleLists)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }else{
+                recommendTask.forEach(element => {
+                    console.log(element)
+                    if(element.publisher==JSON.parse(options.body).userId){
+                        console.log(element.taskId)
+                        for(let o = 0; o < order.length; o++){
+                            if(order[o].taskId==element.taskId){
+                                console.log(order[o].orderId)
+                                for(let d = 0; d < order.length; d++){
+                                    if(draft[d].orderId==order[o].orderId){
+                                        if(draft[d].status==3){
+                                            article= Object.assign(aa,element,order[o],draft[d])
+                                            console.log(article)
+                                            articleLists.push(article)
+                                            console.log(articleLists)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        console.log(articleLists)
+        res={
+            code:200,
+            success:true,
+            articleLists:articleLists
+        };      
         return res
     })
 }

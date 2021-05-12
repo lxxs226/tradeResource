@@ -2,31 +2,31 @@
     <div class="articleDetail">
         <div class="detailTop">
             <div class="detailTitle">
-                {{taskInformation.taskTitle}}
+                {{taskInformation.recommendSubject}}
             </div>
             <div class="detailpublish">
                 <div>
                     发布人：<span style="color:#83cfff;">{{taskInformation.publisher}}</span>
                 </div>
                 <div>
-                    发布任务日期：{{taskInformation.publishDate}}
+                    发布任务日期：{{taskInformation.Releaseday}}
                 </div>
             </div>
-            <div class="contentRequired">任务要求：{{taskInformation.articleRequired}}</div>
+            <div class="contentRequired">任务要求：{{taskInformation.require}}</div>
             <div class="detailpublish">
                 <div>
-                    交稿人：<span style="color:#83cfff;">{{finishArticle.writer}}</span>
+                    交稿人：<span style="color:#83cfff;">{{writerName}}</span>
                 </div>
                 <div>
-                    交稿日期：{{finishArticle.finishDate}}
+                    交稿日期：{{draftInformation.draftDate}}
                 </div>
             </div>
         </div>
         <div class="detailContent">
             <div class="detailContentTitle">文稿内容:</div>
-            <div class="detailContentDetail">{{articleContent}}</div>
+            <div class="detailContentDetail" v-html="draftInformation.contect"></div>
         </div>
-        <div class="detailpublish">
+        <div class="detailpublish" v-if="draftInformation.status==3">
             <div>
                 审核人：<span style="color:#83cfff;">{{passArticle.passPeople}}</span>
             </div>
@@ -35,16 +35,16 @@
             </div>
         </div>
         <!--发布者首次待审核-->
-        <!-- <div class="buttonLinePulisher" >
+        <div class="buttonLinePulisher" v-if="status==2 && draftInformation.status==1">
             <van-button type="info" size="normal" class="buttonDelete" @click="createAdvive=true">发起修改</van-button>
-            <van-button type="info" size="normal">文章合格</van-button>
-        </div> -->
+            <van-button type="info" size="normal" @click="passArticle">文章合格</van-button>
+        </div>
         <!--接单者经过修改后再次待审核-->
-        <div class="buttonLineUpdate" >
+        <!-- <div class="buttonLineUpdate" >
             <van-button type="info" size="normal" class="buttonDelete" @click="showOldAdvice=true">修改意见</van-button>
             <van-button type="info" size="normal" class="buttonDelete" @click="createAdvive=true">发起修改</van-button>
             <van-button type="info" size="normal">文章合格</van-button>
-        </div>
+        </div> -->
         <!--查看历史修改意见-->
         <van-dialog v-model="showOldAdvice" title="历史修改意见" class="adviceDialog" close-on-click-overlay>
             <div class="advicediv">
@@ -73,17 +73,35 @@ export default {
     data(){
         return{
             taskInformation:{
-                taskTitle:'情侣热恋期之后如何保持感情？',//文章标题
-                publishDate:'2021年1月31日',//发布时间
+                recommendSubject:'情侣热恋期之后如何保持感情？',//文章标题
+                Releaseday:'2021年1月31日',//发布时间
                 publisher:'赵丽颖',//发布人
-                articleRequired:'通过这个问题撒旦撒旦撒范德萨范德萨水水水水水水水水等级为呃呃呃呃呃呃呃呃呃呃呃呃呃呃的就是水水水水水水水水水水水水水水水水。',//文章要求
+                require:'通过这个问题撒旦撒旦撒范德萨范德萨水水水水水水水水等级为呃呃呃呃呃呃呃呃呃呃呃呃呃呃的就是水水水水水水水水水水水水水水水水。',//文章要求
+            },
+            order:{
+                orderId:'',
+                taskId:'' , //对应任务id
+                userId:'',  //接单人id
+                userName:'',//接单人姓名
+                status:0,  //订单状态 0：已开始  1：已完成
+                reateday:'',//当前日期  接单日期
+                endday:'',  //实际完成日期
+                projectendday:'', //应当结束日期
+                isOverDue:0,   //是否过期  0：未过期 1：已过期
+                endmoney:'' //实际稿费
+            },
+            draftInformation:{
+                draftId:'',  //文稿id
+                orderId:'',  //订单id 
+                contect:'', //内容
+                status:'',  // 文稿状态 0：待提交 1：已提交，待回复 2：未通过，待修改 3：已通过
+                draftDate:'',  //文稿提交时间
+                passedDate:'',  //文稿通过时间
+                adviceid:'', //意见id
             },
             //交稿信息
-            finishArticle:{
-                writer:'吴亦凡',
-                finishDate:'2021年1月13日'
-            },
-            articleContent:'我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章.',
+            writerName:'',
+            //articleContent:'我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章.',
             //通过信息
             passArticle:{
                 passPeople:'赵丽颖',
@@ -100,8 +118,185 @@ export default {
             //新建意见对话框
             createAdvive:false,
             //新的意见
-            adviceMessage:''
+            adviceMessage:'',
+            taskId:'',
+            orderId:'',
+            //用户身份
+            status:'',
+            draftId:'',
+            account:{
+                accountId:'', //账单id
+                // userId:localStorage.getItem('userId'),  //用户id
+                // userName:localStorage.getItem('userName'), //用户名
+                userId:'',  //用户id
+                userName:'', //用户名s
+                account:'', //金额
+                orderId:'', //订单id
+                orderTitle:'', //订单标题
+                orderEndday:'', //订单完成时间
+                accountTime:'' //账单产生时间
+            }
         }
+    },
+    created(){
+        this.taskId = this.$route.params.taskId
+        this.orderId = this.$route.params.orderId
+        this.draftId = this.$route.params.draftId
+        this.writerName = this.$route.params.writerName
+        console.log(this.writerName)
+        this.status = localStorage.getItem('userIdentity')
+        console.log(this.status)
+        this.getTaskInfo()
+        this.getDraftInfo()
+        this.getOrderInfo()
+    },
+    methods:{
+        //获取任务详情
+        getTaskInfo(){
+            console.log(this.taskId)
+            let that = this
+            this.axios({
+                method: 'get',
+                url: 'task/getTaskInfo',
+                data:{
+                    taskId: this.taskId,//传递过来的任务id
+                }
+            }).then(function(res){
+                console.log(res)
+                if(res.data.success===true){
+                    that.taskInformation=res.data.taskInformation
+                }else{
+                    // that.$toast.fail(res.data.msg);
+                }
+            }).catch(err=>{
+                console.log(err)
+            })
+        },
+        //获取任务详情
+        getOrderInfo(){
+            console.log(this.orderId)
+            let that = this
+            this.axios({
+                method: 'get',
+                url: 'task/getOrderInfo',
+                data:{
+                    orderId: this.orderId,//传递过来的任务id
+                }
+            }).then(function(res){
+                console.log(res)
+                if(res.data.success===true){
+                    that.order=res.data.order
+                }else{
+                    // that.$toast.fail(res.data.msg);
+                }
+            }).catch(err=>{
+                console.log(err)
+            })
+        },
+        //获取文稿详情
+        getDraftInfo(){
+            console.log(this.draftId)
+            let that = this
+            this.axios({
+                method: 'get',
+                url: 'task/getDraftInfo',
+                data:{
+                    draftId: this.draftId,//传递过来的文稿id
+                }
+            }).then(function(res){
+                console.log(res)
+                if(res.data.success===true){
+                    that.draftInformation=res.data.draftInformation
+                }else{
+                    // that.$toast.fail(res.data.msg);
+                }
+            }).catch(err=>{
+                console.log(err)
+            })
+        },
+        //文章合格通过
+        passArticle(){
+            let that = this
+            this.order.status=1
+            this.order.endday=this.getToday()
+            this.order.isOverDue=this.getIsOverDue(this.order.endday,this.order.projectendday)
+            this.order.endmoney=this.taskInformation.income
+            console.log(this.order)
+            this.draft.status=3
+            this.draft.passedDate=this.getToday()
+            console.log(this.draft)
+
+            this.axios({
+                method: 'post',
+                url: 'task/passArticle',
+                data:{
+                    order: this.order,
+                    draft: this.draft
+                }
+            }).then(function(res){
+                console.log(res)
+                if(res.data.success===true){
+                    let publisherIncome='-'+this.taskInformation.income
+                    let writerIncome='+'+this.taskInformation.income
+                    that.addAccount(this.taskInformation.userId,this.taskInformation.publisher,publisherIncome) //插入商家账单
+                    that.addAccount(this.order.userId,this.order.userName,writerIncome) //插入供方账单
+                }else{
+                    that.$toast.fail(res.data.msg);
+                }
+            }).catch(err=>{
+                console.log(err)
+            })
+        },
+        //添加账单
+        addAccount(id,name,income){
+            this.account.userId=id  //用户id
+            this.account.userName=name //用户名
+            this.account.account=income //金额
+            this.account.orderId=name //订单id
+            this.account.orderTitle=name //订单名
+            this.account.orderEndday=this.order.endday//完成日期
+            this.account.accountTime=getToday() //金额产生时间
+            let that = this
+            this.axios({
+                method: 'post',
+                url: 'task/addAccount',
+                data:{
+                    account: this.account
+                }
+            }).then(function(res){
+                console.log(res)
+                if(res.data.success===true){
+                    that.$toast.success({
+                        message: res.data.msg,
+                        duration : 500
+                    });
+                    location.reload()//页面重新加载
+                    //that.$router.push({name:'articleContent',params: { taskId: that.taskId,orderId: that.order.orderId,draftId :that.draft.draftId,writerName:that.writerName }});
+                }else{
+                    that.$toast.fail(res.data.msg);
+                }
+            }).catch(err=>{
+                console.log(err)
+            })
+        },
+        getToday(){
+            //获取今天的时间
+            let today = new Date();
+            today.setTime(today.getTime());
+            let day = today.getFullYear()+"-" + (today.getMonth()+1) + "-" + today.getDate();
+            return day
+        },
+        getIsOverDue(date1,date2){
+            let oDate1 = new Date(date1);//实际完成时间
+            let oDate2 = new Date(date2);//应当完成时间
+            if(oDate1.getTime() > oDate2.getTime()){
+                console.log('第一个大');
+                return 1
+            } else {
+                return 0
+            }
+        }
+     
     }
 }
 </script>

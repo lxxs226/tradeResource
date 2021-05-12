@@ -62,10 +62,12 @@ export default {
             showDelete:false,
             showAccept:false,
             userId:localStorage.getItem('userId'),
+            writerName:localStorage.getItem('userName'),
             order:{
                 orderId:'',
                 taskId:'' , //对应任务id
                 userId:'',  //接单人id
+                userName:'',//接单人姓名
                 status:0,  //订单状态 0：已开始  1：已完成
                 reateday:'',//当前日期  接单日期
                 endday:'',  //实际完成日期
@@ -155,6 +157,7 @@ export default {
         acceptTask(){
             this.order.taskId=this.taskId
             this.order.userId=this.userId
+            this.order.userName=this.writerName
             console.log(this.taskInformation.Releaseday)
             console.log(parseInt(this.taskInformation.pressNumber))
             this.order.projectendday=this.getNewData(this.taskInformation.Releaseday,parseInt(this.taskInformation.pressNumber))
@@ -171,6 +174,7 @@ export default {
             }).then(function(res){
                 console.log(res)
                 if(res.data.success===true){
+                    that.order.orderId=res.data.orderId
                     that.draft.orderId=res.data.orderId
                     that.addDraft()
                     // that.$toast.success({
@@ -215,7 +219,8 @@ export default {
                         message: res.data.msg,
                         duration : 500
                     });
-                    that.$router.push({name:'articleContent',params: { taskId: that.taskId,draftId :that.draft.draftId }});
+                    console.log(that.order.orderId)
+                    that.$router.push({name:'articleContent',params: { taskId: that.taskId,orderId: that.order.orderId,draftId :that.draft.draftId,writerName:that.writerName }});
                 }else{
                     that.$toast.fail(res.data.msg);
                 }

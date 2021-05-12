@@ -88,14 +88,19 @@ export default {
             },
             //editFlag:'2',
             taskId:'',
+            orderId:'',
             //用户身份
             status:'',
-            draftId:''
+            draftId:'',
+            writerName:''
         }
     },
     created(){
         this.taskId = this.$route.params.taskId
+        this.orderId = this.$route.params.orderId
+        console.log(this.orderId)
         this.draftId = this.$route.params.draftId
+        this.writerName = this.$route.params.writerName
         this.status = localStorage.getItem('userIdentity')
         this.getTaskInfo()
         this.getDraftInfo()
@@ -212,7 +217,10 @@ export default {
                         message: res.data.msg,
                         duration : 500
                     });
-                    that.$router.push('/companyTaskManage');
+                    console.log('1111')
+                    // console.log(this.orderId)
+                    that.$router.push({name:'articleDetail',params: { taskId: that.taskId,orderId: that.orderId,draftId :that.draftId,writerName:that.writerName }});
+                    console.log('222')
                 }else{
                     that.$toast.fail(res.data.msg);
                 }
