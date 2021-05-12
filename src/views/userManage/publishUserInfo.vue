@@ -39,7 +39,6 @@ export default {
     this.userId = this.$route.params.userId;
     console.log(this.userId)
     this.getPublishUserInfo()
-
   },
   methods:{
     //获取用户信息

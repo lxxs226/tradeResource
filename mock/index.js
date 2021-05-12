@@ -524,7 +524,6 @@ if(MOCK==true){
                 };
             }
         }
-
         return res
     })
     //文稿管理（发布者）--按照用户id、任务状态、搜索内容，获取任务列表
@@ -635,6 +634,7 @@ if(MOCK==true){
                     if(element.publisher==JSON.parse(options.body).userId){
                         console.log(element.taskId)
                         for(let o = 0; o < order.length; o++){
+                            console.log(order[o])
                             if(order[o].taskId==element.taskId){
                                 console.log(order[o].orderId)
                                 for(let d = 0; d < order.length; d++){
@@ -681,6 +681,117 @@ if(MOCK==true){
             success:true,
             articleLists:articleLists
         };      
+        return res
+    })
+    //需方--文章合格--修改订单&文稿对应项内容
+    Mock.mock('task/passArticle',"post",function(options){
+        let order=JSON.parse(options.body).order
+        let draft=JSON.parse(options.body).draft
+        console.log(order)
+        console.log(draft)
+        let res={}
+        let orderList=JSON.parse(localStorage.getItem("orderList"))
+        let draftlist=JSON.parse(localStorage.getItem("draftList"))
+        for (let index = 0; index < draftlist.length; index++) {
+            if(draftlist[index].draftId==draft.draftId){
+                draftlist[index]=draft
+                console.log(draftlist)
+                localStorage.draftList=JSON.stringify(draftlist)
+                console.log(localStorage.getItem('draftList'))
+            }
+        }
+        for (let index = 0; index < orderList.length; index++) {
+            if(orderList[index].orderId==order.orderId){
+                orderList[index]=order
+                console.log(orderList)
+                localStorage.orderList=JSON.stringify(orderList)
+                console.log(localStorage.getItem('orderList'))
+                res={
+                    code:200,
+                    success:true,
+                };
+            }
+        }
+        return res
+    })
+    //添加账单
+    Mock.mock('task/addAccount',"post",function(options){
+        let account=JSON.parse(options.body).account
+        let accountlist=[]
+        console.log(account)
+        if(localStorage.getItem('accountlist')== null){
+            account.accountId=1
+            console.log(account)
+            accountlist.push(account)
+            localStorage.accountlist=JSON.stringify(accountlist)
+        }else{
+            accountlist=JSON.parse(localStorage.getItem("accountlist"))
+            account.accountId=accountlist.length+1
+            accountlist.push(account)
+            localStorage.accountlist=JSON.stringify(accountlist)
+        }
+        console.log(localStorage.getItem('accountlist'))
+        let res={
+            code:200,
+            success:true,
+            msg:'审核完成！',
+        }
+        return res
+    })
+    //添加建议
+    Mock.mock('task/addAdvice',"post",function(options){
+        let advice=JSON.parse(options.body).advice
+        let draftlist=JSON.parse(localStorage.getItem("draftList"))
+        let advicelist=[]
+        console.log(advice)
+        //1、修改文稿状态
+        for (let index = 0; index < draftlist.length; index++) {
+            if(draftlist[index].draftId==advice.draftId){
+                draftlist[index].status=2
+                console.log(draftlist)
+                localStorage.draftList=JSON.stringify(draftlist)
+                console.log(localStorage.getItem('draftList'))
+            }
+        }
+        //2、添加建议信息
+        if(localStorage.getItem('advicelist')== null){
+            advice.adviceId=1
+            console.log(advice)
+            advicelist.push(advice)
+            localStorage.advicelist=JSON.stringify(advicelist)
+        }else{
+            advicelist=JSON.parse(localStorage.getItem("advicelist"))
+            advice.adviceId=advicelist.length+1
+            advicelist.push(advice)
+            localStorage.advicelist=JSON.stringify(advicelist)
+        }
+        console.log(localStorage.getItem('advicelist'))
+        let res={
+            code:200,
+            success:true,
+            msg:'提交完成！',
+        }
+        return res
+    })
+    //查询账单列表--根据用户&月份信息
+    Mock.mock('task/getAccountList',"get",function(options){
+        console.log(JSON.parse(options.body).userName)
+        console.log(JSON.parse(options.body).monthData)
+        let res={}
+        let accountLists=[]
+        let accountlist=JSON.parse(localStorage.getItem("accountlist"))
+        accountlist.forEach(element => {
+            console.log(element)
+            if(element.userName == (JSON.parse(options.body).userName) && element.accountTime.indexOf(JSON.parse(options.body).monthData) != -1){
+                accountLists.push(element)
+            }
+        });
+        res={
+            code:200,
+            success:true,
+            accountLists:accountLists
+        };
+        console.log(res)
         return res
     })
 }

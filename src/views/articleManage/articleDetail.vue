@@ -28,16 +28,16 @@
         </div>
         <div class="detailpublish" v-if="draftInformation.status==3">
             <div>
-                审核人：<span style="color:#83cfff;">{{passArticle.passPeople}}</span>
+                审核人：<span style="color:#83cfff;">{{taskInformation.publisher}}</span>
             </div>
             <div>
-                交稿日期：{{passArticle.passDate}}
+                合格日期：{{draftInformation.passedDate}}
             </div>
         </div>
         <!--发布者首次待审核-->
         <div class="buttonLinePulisher" v-if="status==2 && draftInformation.status==1">
             <van-button type="info" size="normal" class="buttonDelete" @click="createAdvive=true">发起修改</van-button>
-            <van-button type="info" size="normal" @click="passArticle">文章合格</van-button>
+            <van-button type="info" size="normal" @click="passedArticle">文章合格</van-button>
         </div>
         <!--接单者经过修改后再次待审核-->
         <!-- <div class="buttonLineUpdate" >
@@ -54,9 +54,10 @@
             </div>
         </van-dialog>
         <!--发布修改意见-->
-        <van-dialog v-model="createAdvive" title="修改意见" class="adviceDialog" close-on-click-overlay showCancelButton>
+        <van-dialog v-model="createAdvive" title="修改意见" class="adviceDialog" close-on-click-overlay showCancelButton @confirm="addAdvice">
+            <van-field v-model="advice.adviceChangedateNum" placeholder="请输入修改截止天数（单位：天）" type="number" />
             <van-field
-                v-model="adviceMessage"
+                v-model="advice.adviceContent"
                 rows="6"
                 autosize
                 type="textarea"
@@ -101,12 +102,7 @@ export default {
             },
             //交稿信息
             writerName:'',
-            //articleContent:'我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章我是文章文章文章文章.',
-            //通过信息
-            passArticle:{
-                passPeople:'赵丽颖',
-                passDate:'2021年1月16日'
-            },
+            //articleContent:'我是文',
             //之前的修改意见
             updateAdvice:{
                 adviceDate:'2021年1月17日',
@@ -135,7 +131,16 @@ export default {
                 orderTitle:'', //订单标题
                 orderEndday:'', //订单完成时间
                 accountTime:'' //账单产生时间
+            },
+            advice:{
+                adviceId:'', //修改建议id
+                draftId:'',//对应文稿id
+                adviceContent:'',  //意见内容
+                adviceDate:'',  //意见提交时间
+                adviceChangedate:'', //修改截至日期
+                adviceChangedateNum:''  //修改截至时间天数
             }
+
         }
     },
     created(){
@@ -215,31 +220,31 @@ export default {
             })
         },
         //文章合格通过
-        passArticle(){
+        passedArticle(){
             let that = this
             this.order.status=1
             this.order.endday=this.getToday()
             this.order.isOverDue=this.getIsOverDue(this.order.endday,this.order.projectendday)
             this.order.endmoney=this.taskInformation.income
             console.log(this.order)
-            this.draft.status=3
-            this.draft.passedDate=this.getToday()
-            console.log(this.draft)
+            this.draftInformation.status=3
+            this.draftInformation.passedDate=this.getToday()
+            console.log(this.draftInformation)
 
             this.axios({
                 method: 'post',
                 url: 'task/passArticle',
                 data:{
                     order: this.order,
-                    draft: this.draft
+                    draft: this.draftInformation
                 }
             }).then(function(res){
                 console.log(res)
                 if(res.data.success===true){
-                    let publisherIncome='-'+this.taskInformation.income
-                    let writerIncome='+'+this.taskInformation.income
-                    that.addAccount(this.taskInformation.userId,this.taskInformation.publisher,publisherIncome) //插入商家账单
-                    that.addAccount(this.order.userId,this.order.userName,writerIncome) //插入供方账单
+                    let publisherIncome='-'+that.taskInformation.income
+                    let writerIncome='+'+that.taskInformation.income
+                    that.addAccount(that.taskInformation.userId,that.taskInformation.publisher,publisherIncome) //插入商家账单
+                    that.addAccount(that.order.userId,that.order.userName,writerIncome) //插入供方账单
                 }else{
                     that.$toast.fail(res.data.msg);
                 }
@@ -252,10 +257,10 @@ export default {
             this.account.userId=id  //用户id
             this.account.userName=name //用户名
             this.account.account=income //金额
-            this.account.orderId=name //订单id
-            this.account.orderTitle=name //订单名
+            this.account.orderId=this.taskInformation.taskId //订单id
+            this.account.orderTitle=this.taskInformation.recommendSubject //订单名
             this.account.orderEndday=this.order.endday//完成日期
-            this.account.accountTime=getToday() //金额产生时间
+            this.account.accountTime=this.getToday() //金额产生时间
             let that = this
             this.axios({
                 method: 'post',
@@ -270,7 +275,7 @@ export default {
                         message: res.data.msg,
                         duration : 500
                     });
-                    location.reload()//页面重新加载
+                    // location.reload()//页面重新加载
                     //that.$router.push({name:'articleContent',params: { taskId: that.taskId,orderId: that.order.orderId,draftId :that.draft.draftId,writerName:that.writerName }});
                 }else{
                     that.$toast.fail(res.data.msg);
@@ -286,6 +291,7 @@ export default {
             let day = today.getFullYear()+"-" + (today.getMonth()+1) + "-" + today.getDate();
             return day
         },
+        //判断是否过期
         getIsOverDue(date1,date2){
             let oDate1 = new Date(date1);//实际完成时间
             let oDate2 = new Date(date2);//应当完成时间
@@ -295,7 +301,50 @@ export default {
             } else {
                 return 0
             }
-        }
+        },
+        //添加建议
+        addAdvice(){
+            this.advice.adviceDate=this.getToday()//提出建议时间
+            this.advice.draftId=this.draftInformation.draftId //相应任务id
+            this.advice.adviceChangedate=this.getNewData(this.advice.adviceDate,this.advice.adviceChangedateNum) //修改截止日期
+            let that = this
+            this.axios({
+                method: 'post',
+                url: 'task/addAdvice',
+                data:{
+                    advice: this.advice
+                }
+            }).then(function(res){
+                console.log(res)
+                if(res.data.success===true){
+                    that.$toast.success({
+                        message: res.data.msg,
+                        duration : 500
+                    });
+                    that.getDraftInfo()
+
+                    // location.reload()//页面重新加载
+                    //that.$router.push({name:'articleContent',params: { taskId: that.taskId,orderId: that.order.orderId,draftId :that.draft.draftId,writerName:that.writerName }});
+                }else{
+                    that.$toast.fail(res.data.msg);
+                }
+            }).catch(err=>{
+                console.log(err)
+            })
+        },
+        //获取加天数后的日期
+        getNewData(dateTemp, days) {  
+            var dateTemp = dateTemp.split("-");  
+            var nDate = new Date(dateTemp[1] + '-' + dateTemp[2] + '-' + dateTemp[0]); //转换为MM-DD-YYYY格式    
+            var millSeconds = Math.abs(nDate) + (days * 24 * 60 * 60 * 1000);  
+            var rDate = new Date(millSeconds);  
+            var year = rDate.getFullYear();  
+            var month = rDate.getMonth() + 1;  
+            if (month < 10) month = "0" + month;  
+            var date = rDate.getDate();  
+            if (date < 10) date = "0" + date;  
+            return (year + "-" + month + "-" + date);  
+        },
      
     }
 }
@@ -406,6 +455,8 @@ export default {
 }
 /deep/.van-dialog__cancel, .van-dialog__confirm{
     margin-top: 0.2rem;
-
+}
+/deep/.van-field__control{
+    font-size: 0.35rem;
 }
 </style>

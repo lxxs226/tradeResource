@@ -30,7 +30,7 @@
           <div class="towrite contentCenter"><router-link :to="{name:'userEdit'}"> 修改信息</router-link></div>
         </div>
         <div class="aboutArticle">
-          <div class="towrite contentCenter">我的账单</div>
+          <div class="towrite contentCenter" @click="gotoAccountDetail">我的账单</div>
         </div>
       </div>
     </div>
@@ -49,7 +49,9 @@ export default {
     }
   },
   methods:{
-    
+    gotoAccountDetail(){
+      this.$router.push({name:'accountDetail',params: { userName: this.userName }})
+    }
   }
 }
 </script>

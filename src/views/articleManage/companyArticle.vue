@@ -36,12 +36,12 @@
         <van-tab title="已合格">
           <div v-if="noData" class="nodata">暂无相关任务</div>
           <div class="articleItem" v-for="(item,index) in articleLists" :key="index" v-else>
-            <div class="articleSubjectTitle">{{item.articleSubject}}</div>
-            <div class="articleContent">{{item.content}}</div>
+            <div class="articleSubjectTitle">{{item.recommendSubject}}</div>
+            <div class="articleContent" v-html="item.contect"></div>
             <div class="articleDetail">
               <div class="articleDetailLeft">
-                <div>交稿人：{{item.writer}}</div>
-                <div>完成日期：{{item.completeDate}}</div>
+                <div>交稿人：{{item.userName}}</div>
+                <div>完成日期：{{item.endday}}</div>
               </div>
             </div>
           </div>

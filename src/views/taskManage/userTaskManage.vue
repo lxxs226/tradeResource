@@ -66,6 +66,7 @@ export default {
   data(){
     return{
       searchTask:'',
+      active:'',
       userTaskLists:[{
           userTaskSubject:'配眼镜有哪些必须避开的陷阱？',
           content:'不推荐去小眼镜店，因为一般小的眼镜店里面的验光师水平层次不齐验光不准会导致眼睛容易疲劳度数上涨而且你们以为眼镜只要验光。',

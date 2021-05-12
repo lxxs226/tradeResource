@@ -16,15 +16,16 @@
               />
         </van-popup>
       </div>
-      <div class="accountItem" v-for="(item,index) in accountLists" :key="index">
+      <div v-if="noData" class="nodata">暂无账单记录</div>
+      <div class="accountItem" v-for="(item,index) in accountLists" :key="index" v-else>
         <div class="accountDetailLeft">
-          <div class="accountSubjectTitle">{{item.accountSubject}}</div>
+          <div class="accountSubjectTitle">{{item.orderTitle}}</div>
           <div class="accountAllDetail">
-            <div>{{item.completeDate}}</div>
+            <div>{{item.orderEndday}}</div>
           </div>
         </div>
         <div class="accountRight">
-          <div class="accountIncome">{{item.income}}元</div>
+          <div class="accountIncome">{{item.account}}元</div>
         </div>
         
       </div>
@@ -41,28 +42,28 @@ export default {
         minDate: new Date(2020, 0, 1),
         maxDate: new Date(2025, 10, 1),
         currentDate: new Date(),
-        monthValue:'2021年2月',
+        monthValue:'',
+        userName:'',
         accountLists:[{
-          accountSubject:'情侣热恋期之后如何保存感情？',
-          completeDate:'2021年2月20日',
-          income:10
-        },{
-          accountSubject:'情侣热恋期之后如何保存感情？',
-          completeDate:'2021年2月20日',
-          income:10
-        },{
-          accountSubject:'情侣热恋期之后如何保存感情？',
-          completeDate:'2021年2月20日',
-          income:10
-        },{
-          accountSubject:'情侣热恋期之后如何保存感情？',
-          completeDate:'2021年2月20日',
-          income:10
+          accountId:'', //账单id
+          userId:'',  //用户id
+          userName:'', //用户名s
+          account:'', //金额
+          orderId:'', //订单id
+          orderTitle:'', //订单标题
+          orderEndday:'', //订单完成时间
+          accountTime:'' //账单产生时间
         }
-      ]
-
-         
+      ],
+      noData:false
     }
+  },
+  created(){
+    this.userName = this.$route.params.userName;
+    let date = new Date();
+    this.monthValue = date.getFullYear() + '年' + (date.getMonth()+1) + '月'
+    console.log(this.monthValue)
+    this.getAccountList()
   },
   methods:{
     formatter(type, val) {
@@ -79,7 +80,40 @@ export default {
       let month = val.getMonth() + 1
       this.monthValue = `${year}年${month}月`
       this.show=false
-    }
+      this.getAccountList()
+    },
+    //获取帐单列表
+    getAccountList(){
+      console.log(this.monthValue)
+      let month = this.monthValue.split(/年/)
+      let monthData = month.join('-')
+      monthData = monthData.substr(0, monthData.length - 1);  
+      console.log(monthData) 
+      let that = this
+      this.axios({
+          method: 'get',
+          url: 'task/getAccountList',
+          data:{
+            userName: this.userName,//传递过来的文稿id
+            monthData: monthData
+          }
+      }).then(function(res){
+          console.log(res)
+          if(res.data.success===true){
+            if(res.data.accountLists.length==0){
+              that.noData=true
+            }else{
+              console.log(res.data.accountLists)
+              that.accountLists=res.data.accountLists
+              that.noData=false
+            }
+          }else{
+              // that.$toast.fail(res.data.msg);
+          }
+      }).catch(err=>{
+          console.log(err)
+      })
+    },
   }
 }
 </script>
@@ -132,5 +166,11 @@ export default {
   font-size: .43rem;
   font-weight: bold;
   color: #ff0000;
+}
+.nodata{
+  color:#909399;
+  font-size: 0.3rem;
+  line-height: 600px;
+  text-align: center;
 }
 </style>
