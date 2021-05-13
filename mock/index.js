@@ -794,4 +794,297 @@ if(MOCK==true){
         console.log(res)
         return res
     })
+    //任务管理管理（接单者）--按照用户id、任务状态、搜索内容，获取任务列表
+    Mock.mock('task/getTaskByWriter',"get",function(options){
+        console.log(JSON.parse(options.body))
+        let search=JSON.parse(options.body)
+        let res={}
+        let userTaskLists=[]
+        let userTask = {}
+        let aa={}
+        let draft=JSON.parse(localStorage.getItem("draftList"))
+        let order=JSON.parse(localStorage.getItem("orderList"))
+        if(search.searchTask.length != 0){
+            if(search.active==0){
+                recommendTask.forEach(element => {
+                    console.log(element)
+                    if(element.recommendSubject.indexOf(search.searchTask) != -1){
+                        console.log(element.taskId)
+                        for(let o = 0; o < order.length; o++){
+                            if(order[o].taskId==element.taskId && order[o].userName==search.userId){
+                                console.log(order[o].orderId)
+                                for(let d = 0; d < order.length; d++){
+                                    if(draft[d].orderId==order[o].orderId){
+                                        if(draft[d].status==0){
+                                            userTask= Object.assign(aa,element,order[o],draft[d])
+                                            console.log(userTask)
+                                            userTaskLists.push(userTask)
+                                            console.log(userTaskLists)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }else if(search.active==1){
+                recommendTask.forEach(element => {
+                    console.log(element)
+                    if(element.recommendSubject.indexOf(search.searchTask) != -1){
+                        console.log(element.taskId)
+                        for(let o = 0; o < order.length; o++){
+                            if(order[o].taskId==element.taskId && order[o].userName==search.userId){
+                                console.log(order[o].orderId)
+                                for(let d = 0; d < order.length; d++){
+                                    if(draft[d].orderId==order[o].orderId){
+                                        if(draft[d].status==2){
+                                            userTask= Object.assign(aa,element,order[o],draft[d])
+                                            console.log(userTask)
+                                            userTaskLists.push(userTask)
+                                            console.log(userTaskLists)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }else if(search.active==2){
+                recommendTask.forEach(element => {
+                    console.log(element)
+                    if(element.recommendSubject.indexOf(search.searchTask) != -1){
+                        console.log(element.taskId)
+                        for(let o = 0; o < order.length; o++){
+                            if(order[o].taskId==element.taskId && order[o].userName==search.userId){
+                                console.log(order[o].orderId)
+                                for(let d = 0; d < order.length; d++){
+                                    if(draft[d].orderId==order[o].orderId){
+                                        if(draft[d].status==1){
+                                            userTask= Object.assign(aa,element,order[o],draft[d])
+                                            console.log(userTask)
+                                            userTaskLists.push(userTask)
+                                            console.log(userTaskLists)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }else{
+                recommendTask.forEach(element => {
+                    console.log(element)
+                    if(element.recommendSubject.indexOf(search.searchTask) != -1){
+                        console.log(element.taskId)
+                        for(let o = 0; o < order.length; o++){
+                            if(order[o].taskId==element.taskId && order[o].userName==search.userId){
+                                console.log(order[o].orderId)
+                                for(let d = 0; d < order.length; d++){
+                                    if(draft[d].orderId==order[o].orderId){
+                                        if(draft[d].status==3){
+                                            userTask= Object.assign(aa,element,order[o],draft[d])
+                                            console.log(userTask)
+                                            userTaskLists.push(userTask)
+                                            console.log(userTaskLists)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }else{
+            console.log('22222')
+            if(search.active==0){
+                recommendTask.forEach(element => {
+                    console.log(element)
+                        for(let o = 0; o < order.length; o++){
+                            if(order[o].taskId==element.taskId && order[o].userName==search.userId){
+                                console.log(order[o].orderId)
+                                for(let d = 0; d < order.length; d++){
+                                    if(draft[d].orderId==order[o].orderId){
+                                        if(draft[d].status==0){
+                                            userTask= Object.assign(aa,element,order[o],draft[d])
+                                            console.log(userTask)
+                                            userTaskLists.push(userTask)
+                                            console.log(userTaskLists)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                });
+            }else if(search.active==1){
+                recommendTask.forEach(element => {
+                    console.log(element)
+                        for(let o = 0; o < order.length; o++){
+                            if(order[o].taskId==element.taskId && order[o].userName==search.userId){
+                                console.log(order[o].orderId)
+                                for(let d = 0; d < order.length; d++){
+                                    if(draft[d].orderId==order[o].orderId){
+                                        if(draft[d].status==2){
+                                            userTask= Object.assign(aa,element,order[o],draft[d])
+                                            console.log(userTask)
+                                            userTaskLists.push(userTask)
+                                            console.log(userTaskLists)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                });
+            }else if(search.active==2){
+                recommendTask.forEach(element => {
+                    console.log(element)
+                        for(let o = 0; o < order.length; o++){
+                            if(order[o].taskId==element.taskId && order[o].userName==search.userId){
+                                console.log(order[o].orderId)
+                                for(let d = 0; d < order.length; d++){
+                                    if(draft[d].orderId==order[o].orderId){
+                                        if(draft[d].status==1){
+                                            userTask= Object.assign(aa,element,order[o],draft[d])
+                                            console.log(userTask)
+                                            userTaskLists.push(userTask)
+                                            console.log(userTaskLists)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                });
+            }else{
+                recommendTask.forEach(element => {
+                    console.log(element)
+                        for(let o = 0; o < order.length; o++){
+                            if(order[o].taskId==element.taskId && order[o].userName==search.userId){
+                                console.log(order[o].orderId)
+                                for(let d = 0; d < order.length; d++){
+                                    if(draft[d].orderId==order[o].orderId){
+                                        if(draft[d].status==3){
+                                            userTask= Object.assign(aa,element,order[o],draft[d])
+                                            console.log(userTask)
+                                            userTaskLists.push(userTask)
+                                            console.log(userTaskLists)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                });
+            }
+        }
+        console.log(userTaskLists)
+        res={
+            code:200,
+            success:true,
+            userTaskLists:userTaskLists
+        };      
+        return res
+    })
+    //查询修改意见列表--根据文稿id
+    Mock.mock('task/showAdviceContent',"get",function(options){
+        console.log(JSON.parse(options.body).draftId)
+        let res={}
+        let advices=JSON.parse(localStorage.getItem("advicelist"))
+        let adviceList=[]
+        advices.forEach(element => {
+            console.log(element)
+            if(element.draftId == (JSON.parse(options.body).draftId)){
+                adviceList.push(element)
+            }
+        });
+        res={
+            code:200,
+            success:true,
+            adviceList:adviceList
+        };  
+        console.log(res)
+        return res
+    })
+    //修改文稿
+    Mock.mock('task/changeDraft',"post",function(options){
+        let draftInformation=JSON.parse(options.body).draftInformation
+        console.log(draftInformation)
+        let res={}
+        let draftlist=JSON.parse(localStorage.getItem("draftList"))
+        for (let index = 0; index < draftlist.length; index++) {
+            if(draftlist[index].draftId==draftInformation.draftId){
+                draftlist[index]=draftInformation
+                console.log(draftlist)
+                localStorage.draftList=JSON.stringify(draftlist)
+                console.log(localStorage.getItem('draftList'))
+                res={
+                    code:200,
+                    success:true,
+                    msg:'提交成功！',
+                };
+            }
+        }
+        return res
+    })
+    //查询订单详情--根据订单id
+    Mock.mock('task/getNum',"get",function(options){
+        console.log(JSON.parse(options.body).userIdentity)
+        let writeList=[]
+        let updateList=[]
+        let lookList=[]
+        let waitList=[]
+        let draft=JSON.parse(localStorage.getItem("draftList"))
+        let order=JSON.parse(localStorage.getItem("orderList"))
+        console.log(draft)
+        if(JSON.parse(options.body).userIdentity==1){//用户
+            console.log('11111')
+            for(let o = 0; o < order.length; o++){
+                if(order[o].userName==JSON.parse(options.body).userId){
+                    console.log(order[o].orderId)
+                    for(let d = 0; d < draft.length; d++){
+                        if(draft[d].orderId==order[o].orderId){
+                            if(draft[d].status==0){
+                                writeList.push(draft[d])
+                            }else if(draft[d].status==2){
+                                updateList.push(draft[d])
+                            }
+                        }
+                    }
+                }
+            }
+        }else{
+            console.log('222')
+            recommendTask.forEach(element => {
+                console.log(element)
+                if(element.publisher==JSON.parse(options.body).userId){
+                    console.log(element.status)
+                    if(element.status==0){
+                        waitList.push(element)
+                        console.log(waitList)
+                    }else if(element.status==1){
+                        for(let o = 0; o < order.length; o++){
+                            if(order[o].taskId==element.taskId){
+                                console.log(order[o].orderId)
+                                for(let d = 0; d < draft.length; d++){
+                                    if(draft[d].orderId==order[o].orderId){
+                                        if(draft[d].status==1){
+                                            lookList.push(draft[d])
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+        }
+        let res={
+            code:200,
+            success:true,
+            writeNum:writeList.length,
+            updateNum:updateList.length,
+            lookNum:lookList.length,
+            waitNum:waitList.length
+        }
+        console.log(res)
+        return res
+    })
 }

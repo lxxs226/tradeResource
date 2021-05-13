@@ -10,16 +10,29 @@
           </div>
       </div>
     </router-link>
-    <div class="userInformation userTodo">
+    <div class="userInformation userTodo" v-if="userIdentity=='1'">
       <div class="mytodo">我的待办</div>
       <div class="mytodoDetail">
-        <div class="aboutArticle toWriteArticle">
-          <div class="towrite contentCenter">待编辑文章</div>
+        <div class="aboutArticle toWriteArticle" @click="gotoUserTaskManage(0)">
+          <div class="towrite contentCenter" >待编辑文章</div>
           <div class="towrite"><span class="articleNum">{{writeNum}}</span> 篇</div>
         </div>
-        <div class="aboutArticle">
+        <div class="aboutArticle" @click="gotoUserTaskManage(1)">
           <div class="towrite contentCenter">待修改文章</div>
           <div class="towrite"><span class="articleNum">{{updateNum}}</span> 篇</div>
+        </div>
+      </div>
+    </div>
+    <div class="userInformation userTodo" v-else>
+      <div class="mytodo">我的待办</div>
+      <div class="mytodoDetail">
+        <div class="aboutArticle toWriteArticle" @click="gotoCompanyArticle">
+          <div class="towrite contentCenter" >待审核文章</div>
+          <div class="towrite"><span class="articleNum">{{lookNum}}</span> 篇</div>
+        </div>
+        <div class="aboutArticle" @click="gotoCompanyTaskManage">
+          <div class="towrite contentCenter">待接任务</div>
+          <div class="towrite"><span class="articleNum">{{waitNum}}</span> 篇</div>
         </div>
       </div>
     </div>
@@ -44,13 +57,54 @@ export default {
     return{
       userName:localStorage.getItem('userName'),
       userId:localStorage.getItem('userId'),
-      writeNum:'5',
-      updateNum:'2'
+      writeNum:'',
+      updateNum:'',
+      lookNum:'',
+      waitNum:'',
+      userIdentity:localStorage.getItem('userIdentity')
     }
+  },
+  created(){
+    this.getNum()
   },
   methods:{
     gotoAccountDetail(){
       this.$router.push({name:'accountDetail',params: { userName: this.userName }})
+    },
+    //需方跳转到编辑任务
+    gotoCompanyArticle(){
+      this.$router.push({name:'companyArticle'})
+    },
+    //需方跳转到编辑任务
+    gotoCompanyTaskManage(){
+      this.$router.push({name:'companyTaskManage'})
+    },
+    gotoUserTaskManage(active){
+      this.$router.push({name:'userTaskManage',params: { active: active }})
+    },
+    //获取一堆篇数
+    getNum(){
+      let that = this
+      this.axios({
+        method: 'get',
+        url: 'task/getNum',
+        data:{
+          userId: this.userName,
+          userIdentity:this.userIdentity
+        }
+      }).then(function(res){
+        console.log(res)
+        if(res.data.success===true){
+          that.writeNum=res.data.writeNum
+          that.updateNum=res.data.updateNum
+          that.lookNum=res.data.lookNum
+          that.waitNum=res.data.waitNum
+        }else{
+          // that.$toast.fail(res.data.msg);
+        }
+      }).catch(err=>{
+        console.log(err)
+      })
     }
   }
 }

@@ -9,7 +9,11 @@
           <div v-if="noData" class="nodata">暂无相关任务</div>
           <div class="articleItem" v-for="(item,index) in articleLists" :key="index" v-else>
             <router-link :to="{name:'articleDetail',params:{taskId: item.taskId,orderId: item.orderId,draftId :item.draftId,writerName:item.userName}}">
-              <div class="articleSubjectTitle">{{item.recommendSubject}}</div>
+              <div class="articlebox">
+                <div class="articleSubjectTitle">{{item.recommendSubject}}</div>
+                <van-icon name="bulb-o" size=".6rem" color="red" class="overdue" v-if="item.isOverDue==1"/>
+              </div>
+              <van-icon name="bulb-o" size=".75rem" color="red"/>
               <div class="articleContent" v-html="item.contect"></div>
               <div class="articleDetail">
                 <div class="articleDetailLeft">
@@ -23,12 +27,15 @@
         <van-tab title="未提交">
           <div v-if="noData" class="nodata">暂无相关任务</div>
           <div class="articleItem" v-for="(item,index) in articleLists" :key="index" v-else>
-            <div class="articleSubjectTitle">{{item.articleSubject}}</div>
+            <div class="articlebox">
+              <div class="articleSubjectTitle">{{item.recommendSubject}}</div>
+              <van-icon name="bulb-o" size=".6rem" color="red" class="overdue" v-if="item.isOverDue==1"/>
+            </div>
             <div class="articleDetail">
               <div class="articleDetailLeft">
-                <div>接稿人：{{item.writer}}</div>
-                <div>接稿日期：{{item.acceptDate}}</div>
-                <div>截稿日期：{{item. closingDate}}</div>
+                <div>接稿人：{{item.userName}}</div>
+                <div>接单日期：{{item.reateday}}</div>
+                <div>截稿日期：{{item.projectendday}}</div>
               </div>
             </div>
           </div>
@@ -36,7 +43,10 @@
         <van-tab title="已合格">
           <div v-if="noData" class="nodata">暂无相关任务</div>
           <div class="articleItem" v-for="(item,index) in articleLists" :key="index" v-else>
-            <div class="articleSubjectTitle">{{item.recommendSubject}}</div>
+            <div class="articlebox">
+              <div class="articleSubjectTitle">{{item.recommendSubject}}</div>
+              <van-icon name="bulb-o" size=".6rem" color="red" class="overdue" v-if="item.isOverDue==1"/>
+            </div>
             <div class="articleContent" v-html="item.contect"></div>
             <div class="articleDetail">
               <div class="articleDetailLeft">
@@ -72,9 +82,7 @@ export default {
           // completeDate:'2月8日'
         }
       ],
-      taskList:[],
-      orderList:[],
-      draftList:[]
+
       // taskInformation:{
       //   taskId:'',
       //   recommendSubject:'情侣热恋期之后如何保持感情？',//文章标题
@@ -178,6 +186,13 @@ export default {
 .articleContent{
   margin-left: 2%;
   line-height: 0.5rem;
+  text-overflow: -o-ellipsis-lastline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 .articleDetail{
   display: flex;
@@ -189,6 +204,14 @@ export default {
 }
 .articleDetailLeft{
   width: 67%;
+}
+.articlebox{
+  display: flex;
+  justify-content: space-between;
+}
+.overdue{
+  margin-top:0.1rem;
+  margin-right: 0.3rem;
 }
 .nodata{
   color:#909399;

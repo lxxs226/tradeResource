@@ -33,19 +33,24 @@
         </div>
         <!--接单者待修改-->
         <div class="buttonLineUpdate" v-else>
-            <van-button type="info" size="normal" class="buttonDelete" @click="showAdvice=true">修改意见</van-button>
+            <van-button type="info" size="normal" class="buttonDelete" @click="showAdviceContent">修改意见</van-button>
             <van-button type="info" size="normal" class="buttonDelete">保存</van-button>
-            <van-button type="info" size="normal">提交</van-button>
+            <van-button type="info" size="normal" @click="showChange=true">提交</van-button>
         </div>
         <van-dialog v-model="showAdvice" title="修改意见" class="adviceDialog" close-on-click-overlay>
-            <div class="advicediv">
-                <div>发出修改日期：{{updateAdvice.adviceDate}}</div>
-                <div>修改截至日期：{{updateAdvice.finishUpdateDate}}</div>
-                <div class="adviceContent">修改建议：{{updateAdvice.advice}}</div>
+            <div v-for="(item,index) in adviceList" :key="index" class="advicebox">
+                <div class="advicediv">
+                    <div>发出修改日期：{{item.adviceDate}}</div>
+                    <div>修改截止日期：{{item.adviceChangedate}}</div>
+                    <div class="adviceContent">修改建议：{{item.adviceContent}}</div>
+                </div>
             </div>
         </van-dialog>
         <van-dialog v-model="showPublish" title="确定提交" class="adviceDialog" show-cancel-button @confirm="publishDraft">
             <div class="dialogText">是否确定提交当前文稿？</div>
+        </van-dialog>
+        <van-dialog v-model="showChange" title="确定重新提交" class="adviceDialog" show-cancel-button @confirm="changeDraft">
+            <div class="dialogText">是否确定提交修改后的文稿？</div>
         </van-dialog>
     </div>
     
@@ -76,23 +81,34 @@ export default {
             showAdvice:false,
             //确认提交文稿
             showPublish:false,
-            updateAdvice:{
-                adviceDate:'2021年1月17日',
-                finishUpdateDate:'2021年1月20日',
-                advice:'我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议'
-            },
+            //确认提交修改后的文稿
+            showChange:false,
+            // updateAdvice:{
+            //     adviceDate:'2021年1月17日',
+            //     finishUpdateDate:'2021年1月20日',
+            //     advice:'我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议'
+            // },
+            adviceList:[{
+                adviceId:'', //修改建议id
+                draftId:'',//对应文稿id
+                adviceContent:'',  //意见内容
+                adviceDate:'',  //意见提交时间
+                adviceChangedate:'', //修改截至日期
+                adviceChangedateNum:''  //修改截至时间天数
+            }],
             //交稿信息
             finishArticle:{
                 writer:'吴亦凡',
                 finishDate:'2021年1月13日'
             },
-            //editFlag:'2',
+            editFlag:'1',
             taskId:'',
             orderId:'',
             //用户身份
             status:'',
             draftId:'',
             writerName:''
+
         }
     },
     created(){
@@ -107,47 +123,51 @@ export default {
     },
     mounted(){
         this.$nextTick(v=>{
-            let that = this
-            //一、显示在div内
-            const editor = new E('#editordiv')
-            //二、输入框高度，宽度
-            editor.config.height=320
-            //editor.config.width=300 这样直接设置宽度没有效果，宽度需要给div外套一个div，给他的父级设置宽度
+            setTimeout(() => {
+                let that = this
+                //一、显示在div内
+                const editor = new E('#editordiv')
+                //二、输入框高度，宽度
+                editor.config.height=320
+                //editor.config.width=300 这样直接设置宽度没有效果，宽度需要给div外套一个div，给他的父级设置宽度
 
-            //三、配置菜单的两种方式
-            //1直接配置所有需要的
-            editor.config.menus = ['head','bold','fontSize','fontName','foreColor','lineHeight','italic','underline',
-                    'link','list','justify','emoticon','image','table','undo','redo']
-            //2不需要的较少时，单独配置不需要的
-            //editor.config.excludeMenus =['strikeThrough','indent','backColor','todo','quote','video','code','splitLine']
+                //三、配置菜单的两种方式
+                //1直接配置所有需要的
+                editor.config.menus = ['head','bold','fontSize','fontName','foreColor','lineHeight','italic','underline',
+                        'link','list','justify','emoticon','image','table','undo','redo']
+                //2不需要的较少时，单独配置不需要的
+                //editor.config.excludeMenus =['strikeThrough','indent','backColor','todo','quote','video','code','splitLine']
 
-            //四、可以配置编辑器的文字颜色的可选项，字体，字号，表情.....的可选项，配置代码高亮见官网
-            // editor.config.colors = ['#08888e','#eeecee','#1c487f','#4d80bf']
-            // editor.config.fontNames = ['黑体','仿宋']
+                //四、可以配置编辑器的文字颜色的可选项，字体，字号，表情.....的可选项，配置代码高亮见官网
+                // editor.config.colors = ['#08888e','#eeecee','#1c487f','#4d80bf']
+                // editor.config.fontNames = ['黑体','仿宋']
 
-            //五、配置上传图片，可以添加本地上传图片的方式，需要添加服务器
-            //editor.config.uploadImgServer = '/upload-img' //upload-img 的位置适用于配置后端用于将本地图片转换为网络地址的接口名
-            //editor.config.uploadImgMaxSize = 2 * 1024 * 1024 //限制图片大小2M
-            //editor.config. uploadImgAccept = [ 'jpg','jpeg','png','gif','bmp'] //限制图片类型
-            editor.config.uploadImgMaxLength = 10 //一次最多上传10个图片
-            //还可以进行图片加密base64，与服务器方法不可同时使用
-            editor.config.uploadImgShowBase64 = true//加密之后不需要过服务器也可以本地上传，有浏览器进行加密解密
+                //五、配置上传图片，可以添加本地上传图片的方式，需要添加服务器
+                //editor.config.uploadImgServer = '/upload-img' //upload-img 的位置适用于配置后端用于将本地图片转换为网络地址的接口名
+                //editor.config.uploadImgMaxSize = 2 * 1024 * 1024 //限制图片大小2M
+                //editor.config. uploadImgAccept = [ 'jpg','jpeg','png','gif','bmp'] //限制图片类型
+                editor.config.uploadImgMaxLength = 10 //一次最多上传10个图片
+                //还可以进行图片加密base64，与服务器方法不可同时使用
+                editor.config.uploadImgShowBase64 = true//加密之后不需要过服务器也可以本地上传，有浏览器进行加密解密
 
-            // 六、配置全屏功能按钮是否展示
-            editor.config.showFullScreen = false
-            // editor.customConfig.zIndex = 5
-            // 七、监听内容变化，获取html代码
-            editor.config.onchange = function (html){//第二步，监控变化，获取到实时输入内容对应的html，同步更新到textarea
-                that.content=html
-            } 
-            //八、获取输入内容
-            //不检测变化，获取最终html：editor.txt.html()
-            //获取最终text内容：editor.txt.text()，只是输入内容没有标签
-            //由于获取到的html不包括css部分，所以反显的时候类似表格，或者代码高亮无法显示，需要在css部分手动添加样式
-            editor.create()
-            //使用editor.txt.html，可以讲之前插入的内容反显到编辑器里，用于修改
-            // if(this.editFlag === '1'){
-            //         editor.txt.html(this.content);
+                // 六、配置全屏功能按钮是否展示
+                editor.config.showFullScreen = false
+                // editor.customConfig.zIndex = 5
+                // 七、监听内容变化，获取html代码
+                editor.config.onchange = function (html){//第二步，监控变化，获取到实时输入内容对应的html，同步更新到textarea
+                    that.content=html
+                } 
+                //八、获取输入内容
+                //不检测变化，获取最终html：editor.txt.html()
+                //获取最终text内容：editor.txt.text()，只是输入内容没有标签
+                //由于获取到的html不包括css部分，所以反显的时候类似表格，或者代码高亮无法显示，需要在css部分手动添加样式
+                editor.create()
+                //使用editor.txt.html，可以讲之前插入的内容反显到编辑器里，用于修改
+                // if(that.editFlag === '1'){
+                console.log('1111')
+                console.log(that.draftInformation.contect)
+                editor.txt.html(that.draftInformation.contect);
+            }, 100)
             // }
         })
     },
@@ -190,6 +210,9 @@ export default {
                 console.log(res)
                 if(res.data.success===true){
                     that.draftInformation=res.data.draftInformation
+                    console.log(that.draftInformation.contect)
+                    // that.aContent=that.draftInformation.contect
+                    that.editFlag='1'
                 }else{
                     // that.$toast.fail(res.data.msg);
                 }
@@ -234,6 +257,58 @@ export default {
             today.setTime(today.getTime());
             let day = today.getFullYear()+"-" + (today.getMonth()+1) + "-" + today.getDate();
             return day
+        },
+        //获取修改意见
+        showAdviceContent(){
+            let that = this
+            this.axios({
+                method: 'get',
+                url: 'task/showAdviceContent',
+                data:{
+                    draftId: this.draftId//文稿id
+                }
+            }).then(function(res){
+                console.log(res)
+                if(res.data.success===true){
+                    that.adviceList=res.data.adviceList
+                    that.showAdvice=true
+                }else{
+                    // that.$toast.fail(res.data.msg);
+                }
+            }).catch(err=>{
+                console.log(err)
+            })
+        },
+        //提交修改后的文稿
+        changeDraft(){
+            this.draftInformation.status=1
+            this.draftInformation.contect=this.content
+            this.draftInformation.draftDate=this.getToday()
+            console.log(this.draftInformation)
+            let that = this
+            this.axios({
+                method: 'post',
+                url: 'task/changeDraft',
+                data:{
+                    draftInformation: this.draftInformation,
+                }
+            }).then(function(res){
+                console.log(res)
+                if(res.data.success===true){
+                    that.$toast.success({
+                        message: res.data.msg,
+                        duration : 500
+                    });
+                    console.log('1111')
+                    // console.log(this.orderId)
+                    that.$router.push({name:'articleDetail',params: { taskId: that.taskId,orderId: that.orderId,draftId :that.draftId,writerName:that.writerName }});
+                    console.log('222')
+                }else{
+                    that.$toast.fail(res.data.msg);
+                }
+            }).catch(err=>{
+                console.log(err)
+            })
         }
     }
 }
@@ -328,6 +403,10 @@ export default {
         line-height: 0.55rem;
         margin-bottom: 0.2rem;
     }
+    border-bottom: 1px solid #e5e5e5;
+}
+.advicebox:last-of-type .advicediv{
+    border-bottom: none;
 }
 /deep/.van-dialog__confirm, .van-dialog__confirm:active{
     margin-top: 0.2rem;
