@@ -17,22 +17,22 @@ var recommendTask=[{
     mediaId:0,//媒体类别id
     mediaCategory:'知乎',//媒体类别
     pressNumber:5,//截至天数
-    Releaseday:'2020-12-29',//发布日期
+    Releaseday:'2021-4-29',//发布日期
     income:10,//预计稿费
     status:0 //任务状态  0：已发布，1：已删除
 },
 {
     taskId:2,//任务id
     userId:1,//用户id
-    publisher:'张三',
+    publisher:'庞梦迪',
     recommendSubject:'宣传app',//题目
     require:'字数大于600字，尽快完成。',//题目要求
-    industryId:'2 0',//行业类别id
-    industryCategory:'营销 情感',//行业类别
+    industryId:'2 4',//行业类别id
+    industryCategory:'营销 互联网',//行业类别
     mediaId:1,//媒体类别id
     mediaCategory:'微博',//媒体类别
     pressNumber:2,//截至天数
-    Releaseday:'2020-12-02',//发布日期
+    Releaseday:'2021-05-02',//发布日期
     income:190,//预计稿费
     status:0 //任务状态  0：已发布，1:已被接单 ，2：已删除
 },
@@ -47,24 +47,99 @@ var recommendTask=[{
     mediaId:2,//媒体类别id
     mediaCategory:'豆瓣',//媒体类别
     pressNumber:6,//截至天数
-    Releaseday:'2020-12-02',//发布日期
+    Releaseday:'2021-05-02',//发布日期
     income:100,//预计稿费
     status:0 //任务状态 0：已发布，1:已被接单 ，2：已删除
 },
 {
     taskId:4,//任务id
     userId:1,//用户id
-    publisher:'张三',
+    publisher:'庞梦迪',
     recommendSubject:'科普法律知识',//题目
-    require:'尽快完成。',//题目要求
-    industryId:'2 0',//行业类别id
-    industryCategory:'营销 情感',//行业类别
+    require:'法律相关工作者接单。',//题目要求
+    industryId:'1 3',//行业类别id
+    industryCategory:'生活 资讯',//行业类别
     mediaId:1,//媒体类别id
     mediaCategory:'微博',//媒体类别
     pressNumber:2,//截至天数
-    Releaseday:'2020-12-02',//发布日期
+    Releaseday:'2021-04-28',//发布日期
     income:180,//预计稿费
     status:0 //任务状态  0：已发布，1:已被接单 ，2：已删除
+},
+{
+    taskId:5,//任务id
+    userId:1,//用户id
+    publisher:'庞梦迪',
+    recommendSubject:'奥迪A3L与A3的对比介绍',//题目
+    require:'需要有照片对比，外观和内饰以及汽车发动机性能方面都需要介绍到。',//题目要求
+    industryId:'6 3',//行业类别id
+    industryCategory:'汽车 资讯',//行业类别
+    mediaId:0,//媒体类别id
+    mediaCategory:'知乎',//媒体类别
+    pressNumber:2,//截至天数
+    Releaseday:'2021-05-03',//发布日期
+    income:180,//预计稿费
+    status:0 //任务状态  0：已发布，1:已被接单 ，2：已删除
+},
+{
+    taskId:6,//任务id
+    userId:1,//用户id
+    publisher:'庞梦迪',
+    recommendSubject:'你认为最棒的一部电影？',//题目
+    require:'需要看到文章能够引起大家的共鸣',//题目要求
+    industryId:'16',//行业类别id
+    industryCategory:'影视',//行业类别
+    mediaId:0,//媒体类别id
+    mediaCategory:'知乎',//媒体类别
+    pressNumber:5,//截至天数
+    Releaseday:'2021-05-04',//发布日期
+    income:50,//预计稿费
+    status:0 //任务状态  0：已发布，1:已被接单 ，2：已删除
+},
+{
+    taskId:7,//任务id
+    userId:1,//用户id
+    publisher:'庞梦迪',
+    recommendSubject:'如果让你推荐一本书，你最想推荐的是哪一本？',//题目
+    require:'需要从中宣传我们的看书app，从各个角度进行介绍，不要打广告过于明显。',//题目要求
+    industryId:'2',//行业类别id
+    industryCategory:'营销',//行业类别
+    mediaId:0,//媒体类别id
+    mediaCategory:'知乎',//媒体类别
+    pressNumber:6,//截至天数
+    Releaseday:'2021-05-05',//发布日期
+    income:60,//预计稿费
+    status:0 //任务状态  0：已发布，1:已被接单 ，2：已删除
+},
+{
+    taskId:8,//任务id
+    userId:1,//用户id
+    publisher:'庞梦迪',
+    recommendSubject:'如何判断自己适合做什么工作？',//题目
+    require:'需要从性格方面进行解读。',//题目要求
+    industryId:'18',//行业类别id
+    industryCategory:'职场',//行业类别
+    mediaId:0,//媒体类别id
+    mediaCategory:'知乎',//媒体类别
+    pressNumber:6,//截至天数
+    Releaseday:'2021-05-05',//发布日期
+    income:60,//预计稿费
+    status:1 //任务状态  0：已发布，1:已被接单 ，2：已删除
+},
+{
+    taskId:9,//任务id
+    userId:1,//用户id
+    publisher:'庞梦迪',
+    recommendSubject:'今年流行的纯欲风在穿搭和妆容方面都有什么特点？',//题目
+    require:'穿搭的技巧和妆容的技巧都要叙述。',//题目要求
+    industryId:'11 12',//行业类别id
+    industryCategory:'美妆 时尚',//行业类别
+    mediaId:0,//媒体类别id
+    mediaCategory:'知乎',//媒体类别
+    pressNumber:6,//截至天数
+    Releaseday:'2021-05-05',//发布日期
+    income:60,//预计稿费
+    status:1 //任务状态  0：已发布，1:已被接单 ，2：已删除
 },]
 // columns1: ['0知乎', '1微博' , '2豆瓣', '3今日头条号','4懂车帝','5搜狐', '6网易', '7企鹅',
 //          '8新浪看点', '9一点资讯', '10东方头条', '11太平洋号', '12趣头条', '13简书', '14其他','15媒体分类，即全部']
@@ -988,17 +1063,26 @@ if(MOCK==true){
         let res={}
         let advices=JSON.parse(localStorage.getItem("advicelist"))
         let adviceList=[]
-        advices.forEach(element => {
-            console.log(element)
-            if(element.draftId == (JSON.parse(options.body).draftId)){
-                adviceList.push(element)
-            }
-        });
-        res={
-            code:200,
-            success:true,
-            adviceList:adviceList
-        };  
+        console.log(advices)
+        if(advices===null){
+            res={
+                code:200,
+                success:true,
+                adviceList:[]
+            }; 
+        }else{
+            advices.forEach(element => {
+                console.log(element)
+                if(element.draftId == (JSON.parse(options.body).draftId)){
+                    adviceList.push(element)
+                }
+            });
+            res={
+                code:200,
+                success:true,
+                adviceList:adviceList
+            }; 
+        }
         console.log(res)
         return res
     })

@@ -35,22 +35,24 @@
             </div>
         </div>
         <!--发布者首次待审核-->
-        <div class="buttonLinePulisher" v-if="status==2 && draftInformation.status==1">
+        <div class="buttonLinePulisher" v-if="status==2 && draftInformation.status==1 && adviceList.length==0">
             <van-button type="info" size="normal" class="buttonDelete" @click="createAdvive=true">发起修改</van-button>
             <van-button type="info" size="normal" @click="passedArticle">文章合格</van-button>
         </div>
         <!--接单者经过修改后再次待审核-->
-        <!-- <div class="buttonLineUpdate" >
+        <div class="buttonLineUpdate" v-if="status==2 && draftInformation.status==1 && adviceList.length!=0">
             <van-button type="info" size="normal" class="buttonDelete" @click="showOldAdvice=true">修改意见</van-button>
             <van-button type="info" size="normal" class="buttonDelete" @click="createAdvive=true">发起修改</van-button>
-            <van-button type="info" size="normal">文章合格</van-button>
-        </div> -->
+            <van-button type="info" size="normal" @click="passedArticle">文章合格</van-button>
+        </div>
         <!--查看历史修改意见-->
         <van-dialog v-model="showOldAdvice" title="历史修改意见" class="adviceDialog" close-on-click-overlay>
-            <div class="advicediv">
-                <div>发出修改日期：{{updateAdvice.adviceDate}}</div>
-                <div>修改截至日期：{{updateAdvice.finishUpdateDate}}</div>
-                <div class="adviceContent">修改建议：{{updateAdvice.advice}}</div>
+            <div v-for="(item,index) in adviceList" :key="index" class="advicebox">
+                <div class="advicediv">
+                    <div>发出修改日期：{{item.adviceDate}}</div>
+                    <div>修改截止日期：{{item.adviceChangedate}}</div>
+                    <div class="adviceContent">修改建议：{{item.adviceContent}}</div>
+                </div>
             </div>
         </van-dialog>
         <!--发布修改意见-->
@@ -104,11 +106,19 @@ export default {
             writerName:'',
             //articleContent:'我是文',
             //之前的修改意见
-            updateAdvice:{
-                adviceDate:'2021年1月17日',
-                finishUpdateDate:'2021年1月20日',
-                advice:'我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议'
-            },
+            // updateAdvice:{
+            //     adviceDate:'2021年1月17日',
+            //     finishUpdateDate:'2021年1月20日',
+            //     advice:'我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议我是建议'
+            // },
+            adviceList:[{
+                adviceId:'', //修改建议id
+                draftId:'',//对应文稿id
+                adviceContent:'',  //意见内容
+                adviceDate:'',  //意见提交时间
+                adviceChangedate:'', //修改截至日期
+                adviceChangedateNum:''  //修改截至时间天数
+            }],
             //之前发布的意见对话框
             showOldAdvice:false,
             //新建意见对话框
@@ -154,8 +164,30 @@ export default {
         this.getTaskInfo()
         this.getDraftInfo()
         this.getOrderInfo()
+        this.showAdviceContent()
     },
     methods:{
+        //获取修改意见
+        showAdviceContent(){
+            let that = this
+            this.axios({
+                method: 'get',
+                url: 'task/showAdviceContent',
+                data:{
+                    draftId: this.draftId//文稿id
+                }
+            }).then(function(res){
+                console.log(res)
+                if(res.data.success===true){
+                    that.adviceList=res.data.adviceList
+                    that.showAdvice=true
+                }else{
+                    // that.$toast.fail(res.data.msg);
+                }
+            }).catch(err=>{
+                console.log(err)
+            })
+        },
         //获取任务详情
         getTaskInfo(){
             console.log(this.taskId)
